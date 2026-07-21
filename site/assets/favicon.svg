@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Motus Work Ledger">
+  <rect width="64" height="64" rx="14" fill="#2456e6"/>
+  <g fill="none" stroke="#ffffff" stroke-linecap="round" stroke-width="4">
+    <path d="M15 20h6M28 20h21"/>
+    <path d="M15 32h6M28 32h21"/>
+    <path d="M15 44h6M28 44h21"/>
+  </g>
+</svg>

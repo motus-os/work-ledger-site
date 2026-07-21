@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Privacy | Motus Work Ledger</title>
+  <meta name="description" content="How the Motus Work Ledger website and command-line application handle data.">
+  <link rel="canonical" href="https://www.motussupra.com/privacy.html">
+  <meta name="theme-color" content="#f7f8fa">
+  <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+  <link rel="stylesheet" href="/assets/site.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header">
+    <div class="shell header-inner">
+      <a class="brand" href="/" aria-label="Motus Work Ledger home">
+        <svg class="brand-mark" viewBox="0 0 28 28" aria-hidden="true">
+          <rect width="28" height="28" rx="6"></rect>
+          <path d="M7 8.5h2.5M12 8.5h9M7 14h2.5M12 14h9M7 19.5h2.5M12 19.5h9"></path>
+        </svg>
+        <span>Motus Work Ledger</span>
+      </a>
+      <nav class="site-nav" aria-label="Primary navigation">
+        <a href="/#how-it-works">How it works</a>
+        <a href="/#recorded">What it records</a>
+        <a href="https://github.com/motus-os/work-ledger">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main" class="page shell">
+    <header class="page-header">
+      <h1>Privacy</h1>
+      <p>The website is static. The command-line application keeps its ledger on your machine.</p>
+    </header>
+
+    <div class="page-body">
+      <section aria-labelledby="site-title">
+        <h2 id="site-title">This website</h2>
+        <p>The site has no analytics, advertising, cookies, forms, accounts, or client-side JavaScript. It does not receive or upload your Motus ledger.</p>
+        <p>The hosting provider may process standard web request data such as an IP address, requested URL, browser information, and request time to deliver and protect the site. See <a href="https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement">GitHub's privacy statement</a> for its practices.</p>
+      </section>
+
+      <section aria-labelledby="app-title">
+        <h2 id="app-title">The command-line application</h2>
+        <p>Motus stores selected command metadata in <code>.motus/ledger.db</code> at the current Git root or working directory unless you choose another state path. It has no telemetry or ledger network client.</p>
+        <p>Command argument values, stdin, raw stdout and stderr, environment variables, source files, prompts, and transcripts are not stored in the version-1 ledger.</p>
+      </section>
+
+      <section aria-labelledby="control-title">
+        <h2 id="control-title">Your control</h2>
+        <p>The ledger is an ordinary local SQLite file. You choose where it lives, whether it is backed up, who can access it, and when it is deleted. Add <code>.motus/</code> to the project's ignore file if it should remain outside version control.</p>
+      </section>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="shell footer-inner">
+      <p>Motus Work Ledger is open source under Apache-2.0.</p>
+      <nav aria-label="Footer navigation">
+        <a href="https://github.com/motus-os/work-ledger">GitHub</a>
+        <a href="/security.html">Security</a>
+        <a href="/privacy.html" aria-current="page">Privacy</a>
+      </nav>
+    </div>
+  </footer>
+</body>
+</html>
