@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Security | Motus Work Ledger</title>
+  <meta name="description" content="The security model, trust boundary, and vulnerability-reporting path for Motus Work Ledger.">
+  <link rel="canonical" href="https://www.motussupra.com/security.html">
+  <meta name="theme-color" content="#f7f8fa">
+  <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+  <link rel="stylesheet" href="/assets/site.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header">
+    <div class="shell header-inner">
+      <a class="brand" href="/" aria-label="Motus Work Ledger home">
+        <svg class="brand-mark" viewBox="0 0 28 28" aria-hidden="true">
+          <rect width="28" height="28" rx="6"></rect>
+          <path d="M7 8.5h2.5M12 8.5h9M7 14h2.5M12 14h9M7 19.5h2.5M12 19.5h9"></path>
+        </svg>
+        <span>Motus Work Ledger</span>
+      </a>
+      <nav class="site-nav" aria-label="Primary navigation">
+        <a href="/#how-it-works">How it works</a>
+        <a href="/#recorded">What it records</a>
+        <a href="https://github.com/motus-os/work-ledger">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main" class="page shell">
+    <header class="page-header">
+      <h1>Security</h1>
+      <p>Motus protects a local ledger from accidental mutation and ordinary application writes. The database owner remains outside that boundary.</p>
+    </header>
+
+    <div class="page-body">
+      <section aria-labelledby="model-title">
+        <h2 id="model-title">What Motus checks</h2>
+        <ul>
+          <li>state paths and private POSIX permissions</li>
+          <li>schema version and required SQLite objects</li>
+          <li>database integrity and foreign keys</li>
+          <li>event payload hashes and sequence order</li>
+          <li>terminal events against their run projections</li>
+        </ul>
+        <p>SQLite constraints and triggers reject ordinary event mutation, deletion, sequence gaps, writes after a terminal event, run deletion, and changes to a closed run.</p>
+      </section>
+
+      <section aria-labelledby="boundary-title">
+        <h2 id="boundary-title">Trust boundary</h2>
+        <p>A person who controls the database file can drop the triggers, change records and hashes, and restore a self-consistent schema. A passing <code>motus doctor</code> report cannot prove this never happened.</p>
+        <p>Receipts are not signed. Motus does not independently observe the command or prove that every relevant event was captured, that the producer told the truth, or that the work was correct.</p>
+      </section>
+
+      <section aria-labelledby="data-title">
+        <h2 id="data-title">Sensitive data</h2>
+        <p>The version-1 ledger accepts only Motus-generated start and terminal lifecycle payloads. Command argument values, stdin, raw output, environment variables, source files, prompts, and transcripts are not stored.</p>
+      </section>
+
+      <section aria-labelledby="report-title">
+        <h2 id="report-title">Report a vulnerability</h2>
+        <p>Do not open a public issue for a suspected vulnerability. Use the repository's <a href="https://github.com/motus-os/work-ledger/security/advisories/new">private vulnerability-reporting form</a>.</p>
+        <p>The complete, versioned policy lives in <a href="https://github.com/motus-os/work-ledger/blob/main/SECURITY.md">SECURITY.md</a>.</p>
+      </section>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="shell footer-inner">
+      <p>Motus Work Ledger is open source under Apache-2.0.</p>
+      <nav aria-label="Footer navigation">
+        <a href="https://github.com/motus-os/work-ledger">GitHub</a>
+        <a href="/security.html" aria-current="page">Security</a>
+        <a href="/privacy.html">Privacy</a>
+      </nav>
+    </div>
+  </footer>
+</body>
+</html>

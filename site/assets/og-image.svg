@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <rect width="1200" height="630" fill="#f7f8fa"/>
+  <rect x="72" y="72" width="72" height="72" rx="16" fill="#2456e6"/>
+  <g fill="none" stroke="#ffffff" stroke-linecap="round" stroke-width="5">
+    <path d="M90 94h7M106 94h20"/>
+    <path d="M90 108h7M106 108h20"/>
+    <path d="M90 122h7M106 122h20"/>
+  </g>
+  <text x="168" y="119" fill="#101217" font-family="Arial, Helvetica, sans-serif" font-size="30" font-weight="700">Motus Work Ledger</text>
+  <line x1="72" y1="190" x2="1128" y2="190" stroke="#dce1e8" stroke-width="2"/>
+  <text x="72" y="302" fill="#101217" font-family="Arial, Helvetica, sans-serif" font-size="68" font-weight="700">Keep a local record of the</text>
+  <text x="72" y="384" fill="#101217" font-family="Arial, Helvetica, sans-serif" font-size="68" font-weight="700">commands that did the work.</text>
+  <text x="72" y="474" fill="#606978" font-family="Arial, Helvetica, sans-serif" font-size="29">Local SQLite. Stable run IDs. Deterministic JSON receipts.</text>
+  <rect x="72" y="535" width="1056" height="3" fill="#2456e6"/>
+</svg>

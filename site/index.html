@@ -1,0 +1,250 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Motus Work Ledger | Local command records and receipts</title>
+  <meta name="description" content="Motus records selected command runs in a local SQLite ledger and projects each closed run into a deterministic JSON receipt.">
+  <link rel="canonical" href="https://www.motussupra.com/">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Motus Work Ledger">
+  <meta property="og:description" content="Keep a local record of the commands that did the work.">
+  <meta property="og:url" content="https://www.motussupra.com/">
+  <meta property="og:image" content="https://www.motussupra.com/assets/og-image.png">
+  <meta property="og:image:alt" content="Motus Work Ledger. Keep a local record of the commands that did the work.">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="theme-color" content="#f7f8fa">
+  <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+  <link rel="stylesheet" href="/assets/site.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="site-header">
+    <div class="shell header-inner">
+      <a class="brand" href="/" aria-label="Motus Work Ledger home">
+        <svg class="brand-mark" viewBox="0 0 28 28" aria-hidden="true">
+          <rect width="28" height="28" rx="6"></rect>
+          <path d="M7 8.5h2.5M12 8.5h9M7 14h2.5M12 14h9M7 19.5h2.5M12 19.5h9"></path>
+        </svg>
+        <span>Motus Work Ledger</span>
+      </a>
+      <nav class="site-nav" aria-label="Primary navigation">
+        <a href="#how-it-works">How it works</a>
+        <a href="#recorded">What it records</a>
+        <a href="https://github.com/motus-os/work-ledger">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="hero shell" aria-labelledby="hero-title">
+      <div class="hero-copy">
+        <h1 id="hero-title">Keep a local record of the commands that did the work.</h1>
+        <p class="hero-lede">Motus runs the command you already use, records its lifecycle in SQLite, and gives the run a stable ID and deterministic receipt. Arguments and raw output stay out of the ledger.</p>
+        <div class="hero-actions">
+          <a class="button" href="#quickstart">Build and try it</a>
+          <a class="text-link" href="#how-it-works">See the workflow</a>
+        </div>
+      </div>
+
+      <div class="terminal" aria-label="Example Motus command and result">
+        <div class="terminal-bar" aria-hidden="true">
+          <span></span><span></span><span></span>
+          <strong>terminal</strong>
+        </div>
+        <pre tabindex="0"><code><span class="prompt">$</span> motus wrap -- go test ./...
+ok      example/project    0.42s
+
+<span class="quiet">motus: recorded</span> run_7e2f... <span class="success">(success)</span>
+<span class="quiet">Next:</span> motus --state-dir /repo/.motus run receipt run_7e2f...</code></pre>
+        <div class="terminal-foot">
+          <span>local SQLite</span>
+          <span>no raw output</span>
+          <span>deterministic JSON</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="section shell" id="how-it-works" aria-labelledby="flow-title">
+      <div class="section-intro">
+        <h2 id="flow-title">One command becomes one record.</h2>
+        <p>Motus sits around a command, not inside your application. It preserves the small set of facts needed to find and inspect that run later.</p>
+      </div>
+
+      <ol class="flow" aria-label="Motus command flow">
+        <li>
+          <span class="flow-number">01</span>
+          <strong>Your command</strong>
+          <p>Run the script, test, build, or tool you already use.</p>
+          <code>go test ./...</code>
+        </li>
+        <li>
+          <span class="flow-number">02</span>
+          <strong>Motus wrap</strong>
+          <p>Motus starts it directly, forwards input and output, and records the lifecycle.</p>
+          <code>motus wrap -- ...</code>
+        </li>
+        <li>
+          <span class="flow-number">03</span>
+          <strong>Local ledger</strong>
+          <p>The run and its ordered events are committed to the project ledger.</p>
+          <code>.motus/ledger.db</code>
+        </li>
+        <li>
+          <span class="flow-number">04</span>
+          <strong>Receipt</strong>
+          <p>List the run, then project it into a compact JSON record.</p>
+          <code>motus run receipt</code>
+        </li>
+      </ol>
+    </section>
+
+    <section class="section shell use-section" aria-labelledby="answers-title">
+      <div class="section-intro">
+        <h2 id="answers-title">Answer the practical questions later.</h2>
+        <p>Use Motus when a command still matters after the terminal window or CI job is gone.</p>
+      </div>
+      <ul class="answer-list">
+        <li><span>Which executable ran?</span><strong>Base name and argument count</strong></li>
+        <li><span>Which source state did it use?</span><strong>Repository name, commit, and dirty state</strong></li>
+        <li><span>When did it run?</span><strong>Start, end, and recorded timestamps</strong></li>
+        <li><span>How did it finish?</span><strong>Outcome, exit code, signal, or timeout</strong></li>
+        <li><span>How much output did it produce?</span><strong>Byte and newline counts by stream</strong></li>
+        <li><span>Can I read the same record again?</span><strong>Stable run ID and deterministic receipt</strong></li>
+      </ul>
+    </section>
+
+    <section class="section shell" id="quickstart" aria-labelledby="quickstart-title">
+      <div class="section-intro">
+        <h2 id="quickstart-title">Record, find, and inspect a run.</h2>
+        <p>Build the current source with Go 1.26.5. The command output still goes to your terminal.</p>
+      </div>
+
+      <div class="quickstart">
+        <div class="quickstep">
+          <div><span>1</span><h3>Build Motus</h3></div>
+          <pre tabindex="0"><code>git clone https://github.com/motus-os/work-ledger.git
+cd work-ledger
+go build -o ./bin/motus ./cmd/motus</code></pre>
+        </div>
+        <div class="quickstep">
+          <div><span>2</span><h3>Record a command</h3></div>
+          <pre tabindex="0"><code>./bin/motus wrap -- go test ./...</code></pre>
+        </div>
+        <div class="quickstep">
+          <div><span>3</span><h3>List and inspect it</h3></div>
+          <pre tabindex="0"><code>./bin/motus run list
+./bin/motus run receipt RUN_ID &gt; receipt.json
+./bin/motus doctor</code></pre>
+        </div>
+      </div>
+      <p class="documentation-link"><a href="https://github.com/motus-os/work-ledger#state-and-commands">Read the command reference on GitHub</a></p>
+    </section>
+
+    <section class="section shell" id="recorded" aria-labelledby="recorded-title">
+      <div class="section-intro">
+        <h2 id="recorded-title">Know what is in the ledger.</h2>
+        <p>The default record is deliberately small. Your command still receives its arguments, input, environment, and output, but Motus does not copy their contents into SQLite.</p>
+      </div>
+
+      <div class="boundary-columns">
+        <div>
+          <h3>Recorded</h3>
+          <ul>
+            <li>run and event IDs</li>
+            <li>start, end, and record timestamps</li>
+            <li>executable base name and argument count</li>
+            <li>Git repository name, commit, and dirty state</li>
+            <li>stdout and stderr byte and newline counts</li>
+            <li>exit code, signal, timeout, and outcome</li>
+            <li>generated lifecycle event payloads and hashes</li>
+          </ul>
+        </div>
+        <div>
+          <h3>Not recorded</h3>
+          <ul>
+            <li>argument values</li>
+            <li>stdin</li>
+            <li>raw stdout or stderr</li>
+            <li>environment variables or credentials</li>
+            <li>source files</li>
+            <li>prompts or transcripts</li>
+            <li>anything the command did outside the recorded lifecycle</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="section shell receipt-section" aria-labelledby="receipt-title">
+      <div class="section-intro">
+        <h2 id="receipt-title">A receipt tells you what the ledger recorded.</h2>
+        <p>A closed run projects into compact JSON with ordered events and a receipt hash. Unchanged stored data produces the same receipt bytes each time.</p>
+      </div>
+
+      <div class="receipt-layout">
+        <pre class="receipt-code" tabindex="0"><code>{
+  "schema": "motus.work-receipt.v1",
+  "receipt": {
+    "trust_model": "producer-controlled",
+    "run": {
+      "id": "run_7e2f...",
+      "outcome": "success"
+    }
+  },
+  "receipt_sha256": "06d315b0..."
+}</code></pre>
+        <div class="receipt-copy">
+          <h3>Useful as a local process record</h3>
+          <p>The receipt preserves the run fields and event order in a portable format. <code>motus doctor</code> checks the current schema, payload hashes, sequences, foreign keys, and terminal records.</p>
+          <h3>Not independent proof</h3>
+          <p>A person who controls the database can replace its controls and rewrite a self-consistent history. Motus does not sign the receipt, observe the work independently, or prove that the result was correct.</p>
+          <p><a href="/security.html">Read the security and trust model</a></p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section shell questions" aria-labelledby="questions-title">
+      <div class="section-intro">
+        <h2 id="questions-title">Before you use it.</h2>
+      </div>
+      <dl>
+        <div>
+          <dt>Does Motus record every command?</dt>
+          <dd>No. You choose what matters by running it through <code>motus wrap</code>.</dd>
+        </div>
+        <div>
+          <dt>Why not use shell history or CI logs?</dt>
+          <dd>Use them when one system already answers the question. Motus helps when selected runs need one local index and one receipt shape.</dd>
+        </div>
+        <div>
+          <dt>Can I share a receipt?</dt>
+          <dd>Yes. It is portable JSON. A recipient should still treat it as producer-controlled unless a separate trusted system observed or attested to the work.</dd>
+        </div>
+      </dl>
+    </section>
+
+    <section class="closing">
+      <div class="shell closing-inner">
+        <div>
+          <h2>Start with one command.</h2>
+          <p>Keep the record local. Inspect it when you need it.</p>
+        </div>
+        <a class="button button-light" href="#quickstart">Build from source</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="shell footer-inner">
+      <p>Motus Work Ledger is open source under Apache-2.0.</p>
+      <nav aria-label="Footer navigation">
+        <a href="https://github.com/motus-os/work-ledger">GitHub</a>
+        <a href="/security.html">Security</a>
+        <a href="/privacy.html">Privacy</a>
+      </nav>
+    </div>
+  </footer>
+</body>
+</html>
