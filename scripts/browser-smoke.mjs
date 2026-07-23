@@ -137,6 +137,14 @@ try {
       if (overflow.document > 1 || overflow.body > 1) {
         errors.push(`horizontal overflow: ${JSON.stringify(overflow)}`);
       }
+      if (route === "/") {
+        const terminalOverflow = await page.locator(".terminal pre").evaluate(
+          (element) => element.scrollWidth - element.clientWidth,
+        );
+        if (terminalOverflow > 1) {
+          errors.push(`hero visual requires horizontal scrolling: ${terminalOverflow}px`);
+        }
+      }
 
       await page.addScriptTag({ content: axe.source });
       const axeResults = await page.evaluate(async () => globalThis.axe.run(document, {
