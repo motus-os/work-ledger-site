@@ -42,7 +42,7 @@
     <section class="hero shell" aria-labelledby="hero-title">
       <div class="hero-copy">
         <h1 id="hero-title">Keep a local record of the commands that did the work.</h1>
-        <p class="hero-lede">Run a command through Motus. It saves the starting Git context, timing, and result in local SQLite, then gives every closed run a stable ID and JSON receipt.</p>
+        <p class="hero-lede">Run a command through Motus. It keeps the starting Git context, timing, and result in local SQLite, so you can find the run later. Add a finding when the reason it mattered is worth keeping.</p>
         <div class="hero-actions">
           <a class="button" href="#quickstart">Build and try it</a>
           <a class="text-link" href="#how-it-works">See the workflow</a>
@@ -246,8 +246,8 @@ go build -o ./bin/motus ./cmd/motus</code></pre>
           <dd>When you may need its executable, Git context, timing, outcome, or finding after the terminal or CI job is gone.</dd>
         </div>
         <div>
-          <dt>What does Motus add beyond shell history or CI logs?</dt>
-          <dd>One local index, stable run IDs, searchable findings, and one receipt shape across selected work.</dd>
+          <dt>What does Motus add beyond Git, shell history, or CI logs?</dt>
+          <dd>Git records source changes. Motus gives selected runs stable IDs, a consistent receipt, and findings tied to the runs that exposed and fixed them.</dd>
         </div>
         <div>
           <dt>Can I share a receipt?</dt>
