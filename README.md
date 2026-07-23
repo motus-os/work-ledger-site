@@ -28,8 +28,9 @@ Open <http://127.0.0.1:4173/>.
 
 ## Publishing
 
-Publishing is intentionally absent from this repository. The production
-domain moves only after a reviewed commit passes the local and GitHub checks.
+After GitHub Pages is configured to use GitHub Actions, the `Deploy Pages`
+workflow publishes `site/` from `main` when started manually. Deploy only
+after the reviewed commit passes the local and GitHub checks.
 
 ## License
 
