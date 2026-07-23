@@ -7,7 +7,8 @@ import { chromium } from "playwright";
 import axe from "axe-core";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
-const baseURL = "http://127.0.0.1:4173";
+const origin = "http://127.0.0.1:4173";
+const baseURL = `${origin}/site`;
 const pages = ["/", "/security.html", "/privacy.html", "/404.html"];
 const profiles = [
   { name: "desktop-light", viewport: { width: 1440, height: 1000 }, colorScheme: "light", reducedMotion: "no-preference" },
@@ -18,7 +19,7 @@ const profiles = [
   { name: "narrow-light", viewport: { width: 320, height: 700 }, colorScheme: "light", reducedMotion: "no-preference" },
 ];
 
-const server = spawn("python3", ["-m", "http.server", "4173", "--bind", "127.0.0.1", "--directory", "site"], {
+const server = spawn("python3", ["-m", "http.server", "4173", "--bind", "127.0.0.1", "--directory", "."], {
   cwd: root,
   stdio: ["ignore", "ignore", "pipe"],
 });
@@ -61,7 +62,7 @@ try {
       });
       page.on("pageerror", (error) => errors.push(`page: ${error.message}`));
       page.on("request", (request) => {
-        if (new URL(request.url()).origin !== baseURL) errors.push(`network: ${request.url()}`);
+        if (new URL(request.url()).origin !== origin) errors.push(`network: ${request.url()}`);
       });
       page.on("response", (response) => {
         if (response.status() >= 400) errors.push(`HTTP ${response.status()}: ${response.url()}`);

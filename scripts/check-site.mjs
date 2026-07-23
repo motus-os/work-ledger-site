@@ -110,6 +110,10 @@ for (const page of expectedPages) {
       fail(`${label}: unsupported URL ${reference}`);
       continue;
     }
+    if (reference.startsWith("/")) {
+      fail(`${label}: root-relative local URL is not portable to the repository Pages path: ${reference}`);
+      continue;
+    }
 
     const target = new URL(reference, `https://www.motussupra.com/${page}`);
     const targetPage = pageForURL(target);
