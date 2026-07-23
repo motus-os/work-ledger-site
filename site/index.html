@@ -4,11 +4,11 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Motus Work Ledger | Local command records and receipts</title>
-  <meta name="description" content="Motus records selected command runs in a local SQLite ledger and projects each closed run into a deterministic JSON receipt.">
+  <meta name="description" content="Motus keeps selected command runs in local SQLite, projects deterministic JSON receipts, and connects explicit findings to the runs that exposed and fixed them.">
   <link rel="canonical" href="https://www.motussupra.com/">
   <meta property="og:type" content="website">
   <meta property="og:title" content="Motus Work Ledger">
-  <meta property="og:description" content="Keep a local record of the commands that did the work.">
+  <meta property="og:description" content="Keep local records of the commands that did the work and the findings they exposed.">
   <meta property="og:url" content="https://www.motussupra.com/">
   <meta property="og:image" content="https://www.motussupra.com/assets/og-image.png">
   <meta property="og:image:alt" content="Motus Work Ledger. Keep a local record of the commands that did the work.">
@@ -42,7 +42,7 @@
     <section class="hero shell" aria-labelledby="hero-title">
       <div class="hero-copy">
         <h1 id="hero-title">Keep a local record of the commands that did the work.</h1>
-        <p class="hero-lede">Motus runs the command you already use, records its lifecycle in SQLite, and gives the run a stable ID and deterministic receipt. Arguments and raw output stay out of the ledger.</p>
+        <p class="hero-lede">Motus runs the command you already use, records its lifecycle in SQLite, and gives the run a stable ID and deterministic receipt. When a run exposes a problem, connect the explanation and the run that fixed it.</p>
         <div class="hero-actions">
           <a class="button" href="#quickstart">Build and try it</a>
           <a class="text-link" href="#how-it-works">See the workflow</a>
@@ -113,7 +113,42 @@ ok      example/project    0.42s
         <li><span>How did it finish?</span><strong>Outcome, exit code, signal, or timeout</strong></li>
         <li><span>How much output did it produce?</span><strong>Byte and newline counts by stream</strong></li>
         <li><span>Can I read the same record again?</span><strong>Stable run ID and deterministic receipt</strong></li>
+        <li><span>Why did this run matter?</span><strong>A finding you chose to connect to it</strong></li>
+        <li><span>What closed the finding?</span><strong>A dismissal note or a successful fix run</strong></li>
       </ul>
+    </section>
+
+    <section class="section shell" id="findings" aria-labelledby="findings-title">
+      <div class="section-intro">
+        <h2 id="findings-title">Keep the reason a run mattered.</h2>
+        <p>A failed command gives you an outcome. A finding keeps the explanation or next step you choose to preserve, tied to that run.</p>
+      </div>
+
+      <div class="receipt-layout">
+        <div class="example-code">
+          <pre class="receipt-code" tabindex="0"><code>$ ./bin/motus finding add \
+    --run RUN_ID --file -
+The generated file was stale.
+(press Ctrl-D)
+Recorded finding_91ac... (open)
+
+$ ./bin/motus finding close finding_91ac... \
+    --disposition resolved \
+    --run FIX_RUN_ID --file -
+Regenerated the file before the test.
+(press Ctrl-D)
+Closed finding_91ac... (resolved)</code></pre>
+          <p class="example-note">Output is condensed and IDs are shortened.</p>
+        </div>
+        <div class="receipt-copy">
+          <h3>Connected to the origin run</h3>
+          <p>Each finding keeps the stable ID of the closed run that gave it context.</p>
+          <h3>Closed without rewriting it</h3>
+          <p>A resolution names a closed successful run. A dismissal records a note instead. The original finding remains unchanged.</p>
+          <h3>Search what you wrote</h3>
+          <p><code>finding list --query stale</code> searches the fields you submitted and returns matching findings with their origin run IDs. It does not search raw output or infer a cause.</p>
+        </div>
+      </div>
     </section>
 
     <section class="section shell" id="quickstart" aria-labelledby="quickstart-title">
@@ -160,13 +195,14 @@ go build -o ./bin/motus ./cmd/motus</code></pre>
             <li>stdout and stderr byte and newline counts</li>
             <li>exit code, signal, timeout, and outcome</li>
             <li>generated lifecycle event payloads and hashes</li>
+            <li>finding text and closure notes you submit</li>
           </ul>
         </div>
         <div>
           <h3>Not recorded</h3>
           <ul>
-            <li>argument values</li>
-            <li>stdin</li>
+            <li>command argument values</li>
+            <li>command stdin</li>
             <li>raw stdout or stderr</li>
             <li>environment variables or credentials</li>
             <li>source files</li>
@@ -197,7 +233,8 @@ go build -o ./bin/motus ./cmd/motus</code></pre>
 }</code></pre>
         <div class="receipt-copy">
           <h3>Useful as a local process record</h3>
-          <p>The receipt preserves the run fields and event order in a portable format. <code>motus doctor</code> checks the current schema, payload hashes, sequences, foreign keys, and terminal records.</p>
+          <p>The receipt preserves the run fields and event order in a portable format. <code>motus doctor</code> checks the current schema, payload hashes, sequences, foreign keys, terminal records, and finding links.</p>
+          <p>Findings stay separate from run receipts. Adding or closing one does not change the receipt for its run.</p>
           <h3>Not independent proof</h3>
           <p>A person who controls the database can replace its controls and rewrite a self-consistent history. Motus does not sign the receipt, observe the work independently, or prove that the result was correct.</p>
           <p><a href="/security.html">Read the security and trust model</a></p>

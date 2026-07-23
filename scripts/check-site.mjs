@@ -20,7 +20,22 @@ const forbiddenPhrases = [
   "seamless",
   "supercharge",
   "unlock the power",
+  "version-1 ledger",
 ];
+const requiredPhrases = {
+  "index.html": [
+    'id="findings"',
+    "finding list --query stale",
+    "Findings stay separate from run receipts.",
+  ],
+  "security.html": [
+    "event and finding payload hashes",
+    "Review that content before recording it.",
+  ],
+  "privacy.html": [
+    "Finding text and closure notes are stored only when you submit them",
+  ],
+};
 const failures = [];
 
 function fail(message) {
@@ -70,6 +85,10 @@ for (const page of expectedPages) {
   const lower = html.toLowerCase();
   for (const phrase of forbiddenPhrases) {
     if (lower.includes(phrase)) fail(`${label}: forbidden phrase ${JSON.stringify(phrase)}`);
+  }
+
+  for (const phrase of requiredPhrases[page] || []) {
+    if (!html.includes(phrase)) fail(`${label}: missing required product fact ${JSON.stringify(phrase)}`);
   }
 
   const ownIDs = idsIn(html);

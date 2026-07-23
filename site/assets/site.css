@@ -542,6 +542,16 @@ dd {
   border-color: var(--terminal-rule);
 }
 
+.example-code {
+  min-width: 0;
+}
+
+.example-note {
+  margin: 0.7rem 0 0;
+  color: var(--muted);
+  font-size: 0.82rem;
+}
+
 .receipt-copy h3 {
   margin: 0 0 0.55rem;
   font-size: 1rem;
