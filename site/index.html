@@ -42,7 +42,7 @@
     <section class="hero shell" aria-labelledby="hero-title">
       <div class="hero-copy">
         <h1 id="hero-title">Keep a local record of the commands that did the work.</h1>
-        <p class="hero-lede">Motus runs the command you already use, records its lifecycle in SQLite, and gives the run a stable ID and deterministic receipt. When a run exposes a problem, connect the explanation and the run that fixed it.</p>
+        <p class="hero-lede">Run a command through Motus. It saves the starting Git context, timing, and result in local SQLite, then gives every closed run a stable ID and JSON receipt.</p>
         <div class="hero-actions">
           <a class="button" href="#quickstart">Build and try it</a>
           <a class="text-link" href="#how-it-works">See the workflow</a>
@@ -52,17 +52,21 @@
       <div class="terminal" aria-label="Example Motus command and result">
         <div class="terminal-bar" aria-hidden="true">
           <span></span><span></span><span></span>
-          <strong>terminal</strong>
+          <strong>one recorded run</strong>
         </div>
-        <pre tabindex="0"><code><span class="prompt">$</span> motus wrap -- go test ./...
-ok      example/project    0.42s
+        <pre tabindex="0"><code><span class="quiet">01  COMMAND</span>
+go test ./...
 
-<span class="quiet">motus: recorded</span> run_7e2f... <span class="success">(success)</span>
-<span class="quiet">Next:</span> motus --state-dir /repo/.motus run receipt run_7e2f...</code></pre>
+<span class="quiet">02  LOCAL RECORD</span>
+run_7e2f...  <span class="success">success</span>
+Git 4f2c1a  clean
+
+<span class="quiet">03  RECEIPT</span>
+Ready to inspect or export</code></pre>
         <div class="terminal-foot">
           <span>local SQLite</span>
-          <span>no raw output</span>
-          <span>deterministic JSON</span>
+          <span>stable run ID</span>
+          <span>JSON receipt</span>
         </div>
       </div>
     </section>
@@ -89,7 +93,7 @@ ok      example/project    0.42s
         <li>
           <span class="flow-number">03</span>
           <strong>Local ledger</strong>
-          <p>The run and its ordered events are committed to the project ledger.</p>
+          <p>The run and its ordered events are written to the project ledger.</p>
           <code>.motus/ledger.db</code>
         </li>
         <li>
@@ -108,20 +112,20 @@ ok      example/project    0.42s
       </div>
       <ul class="answer-list">
         <li><span>Which executable ran?</span><strong>Base name and argument count</strong></li>
-        <li><span>Which source state did it use?</span><strong>Repository name, commit, and dirty state</strong></li>
+        <li><span>Which Git context did it start from?</span><strong>Repository name, commit, and dirty state</strong></li>
         <li><span>When did it run?</span><strong>Start, end, and recorded timestamps</strong></li>
         <li><span>How did it finish?</span><strong>Outcome, exit code, signal, or timeout</strong></li>
         <li><span>How much output did it produce?</span><strong>Byte and newline counts by stream</strong></li>
         <li><span>Can I read the same record again?</span><strong>Stable run ID and deterministic receipt</strong></li>
         <li><span>Why did this run matter?</span><strong>A finding you chose to connect to it</strong></li>
-        <li><span>What closed the finding?</span><strong>A dismissal note or a successful fix run</strong></li>
+        <li><span>What closed the finding?</span><strong>A dismissal note or a successful run connected as the fix</strong></li>
       </ul>
     </section>
 
     <section class="section shell" id="findings" aria-labelledby="findings-title">
       <div class="section-intro">
         <h2 id="findings-title">Keep the reason a run mattered.</h2>
-        <p>A failed command gives you an outcome. A finding keeps the explanation or next step you choose to preserve, tied to that run.</p>
+        <p>A failed command gives you an outcome. A finding keeps the explanation or next step worth carrying forward, tied to that run.</p>
       </div>
 
       <div class="receipt-layout">
@@ -146,7 +150,7 @@ Closed finding_91ac... (resolved)</code></pre>
           <h3>Closed without rewriting it</h3>
           <p>A resolution names a closed successful run. A dismissal records a note instead. The original finding remains unchanged.</p>
           <h3>Search what you wrote</h3>
-          <p><code>finding list --query stale</code> searches the fields you submitted and returns matching findings with their origin run IDs. It does not search raw output or infer a cause.</p>
+          <p><code>finding list --query stale</code> searches the text you recorded and returns matching findings with their origin run IDs.</p>
         </div>
       </div>
     </section>
@@ -180,34 +184,26 @@ go build -o ./bin/motus ./cmd/motus</code></pre>
 
     <section class="section shell" id="recorded" aria-labelledby="recorded-title">
       <div class="section-intro">
-        <h2 id="recorded-title">Know what is in the ledger.</h2>
-        <p>The default record is deliberately small. Your command still receives its arguments, input, environment, and output, but Motus does not copy their contents into SQLite.</p>
+        <h2 id="recorded-title">What Motus records.</h2>
+        <p>Each wrapped run keeps its identity, Git context, timing, and outcome in the local ledger.</p>
       </div>
 
       <div class="boundary-columns">
         <div>
-          <h3>Recorded</h3>
+          <h3>Run context</h3>
           <ul>
             <li>run and event IDs</li>
             <li>start, end, and record timestamps</li>
             <li>executable base name and argument count</li>
             <li>Git repository name, commit, and dirty state</li>
-            <li>stdout and stderr byte and newline counts</li>
-            <li>exit code, signal, timeout, and outcome</li>
-            <li>generated lifecycle event payloads and hashes</li>
-            <li>finding text and closure notes you submit</li>
           </ul>
         </div>
         <div>
-          <h3>Not recorded</h3>
+          <h3>Run result</h3>
           <ul>
-            <li>command argument values</li>
-            <li>command stdin</li>
-            <li>raw stdout or stderr</li>
-            <li>environment variables or credentials</li>
-            <li>source files</li>
-            <li>prompts or transcripts</li>
-            <li>anything the command did outside the recorded lifecycle</li>
+            <li>stdout and stderr byte and newline counts</li>
+            <li>exit code, signal, timeout, and outcome</li>
+            <li>ordered start and terminal records</li>
           </ul>
         </div>
       </div>
@@ -215,8 +211,8 @@ go build -o ./bin/motus ./cmd/motus</code></pre>
 
     <section class="section shell receipt-section" aria-labelledby="receipt-title">
       <div class="section-intro">
-        <h2 id="receipt-title">A receipt tells you what the ledger recorded.</h2>
-        <p>A closed run projects into compact JSON with ordered events and a receipt hash. Unchanged stored data produces the same receipt bytes each time.</p>
+        <h2 id="receipt-title">A stable receipt for every closed run.</h2>
+        <p>A closed run becomes compact JSON with ordered events and a receipt hash. Unchanged stored data produces the same bytes each time.</p>
       </div>
 
       <div class="receipt-layout">
@@ -232,32 +228,30 @@ go build -o ./bin/motus ./cmd/motus</code></pre>
   "receipt_sha256": "06d315b0..."
 }</code></pre>
         <div class="receipt-copy">
-          <h3>Useful as a local process record</h3>
-          <p>The receipt preserves the run fields and event order in a portable format. <code>motus doctor</code> checks the current schema, payload hashes, sequences, foreign keys, terminal records, and finding links.</p>
+          <h3>Portable and repeatable</h3>
+          <p>The receipt preserves the run fields and event order in one portable format. <code>motus doctor</code> checks the current schema, payload hashes, sequences, foreign keys, terminal records, and finding links.</p>
           <p>Findings stay separate from run receipts. Adding or closing one does not change the receipt for its run.</p>
-          <h3>Not independent proof</h3>
-          <p>A person who controls the database can replace its controls and rewrite a self-consistent history. Motus does not sign the receipt, observe the work independently, or prove that the result was correct.</p>
-          <p><a href="./security.html">Read the security and trust model</a></p>
+          <p>The receipt identifies its trust model as producer-controlled. <a href="./security.html">Read what that means.</a></p>
         </div>
       </div>
     </section>
 
     <section class="section shell questions" aria-labelledby="questions-title">
       <div class="section-intro">
-        <h2 id="questions-title">Before you use it.</h2>
+        <h2 id="questions-title">Where Motus fits.</h2>
       </div>
       <dl>
         <div>
-          <dt>Does Motus record every command?</dt>
-          <dd>No. You choose what matters by running it through <code>motus wrap</code>.</dd>
+          <dt>When is a run worth recording?</dt>
+          <dd>When you may need its executable, Git context, timing, outcome, or finding after the terminal or CI job is gone.</dd>
         </div>
         <div>
-          <dt>Why not use shell history or CI logs?</dt>
-          <dd>Use them when one system already answers the question. Motus helps when selected runs need one local index and one receipt shape.</dd>
+          <dt>What does Motus add beyond shell history or CI logs?</dt>
+          <dd>One local index, stable run IDs, searchable findings, and one receipt shape across selected work.</dd>
         </div>
         <div>
           <dt>Can I share a receipt?</dt>
-          <dd>Yes. It is portable JSON. A recipient should still treat it as producer-controlled unless a separate trusted system observed or attested to the work.</dd>
+          <dd>Yes. It is portable JSON with the recorded fields, event order, receipt hash, and stated trust model.</dd>
         </div>
       </dl>
     </section>
