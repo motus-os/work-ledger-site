@@ -46,7 +46,8 @@
       <section aria-labelledby="app-title">
         <h2 id="app-title">The command-line application</h2>
         <p>Motus stores selected command metadata in <code>.motus/ledger.db</code> at the current Git root or working directory unless you choose another state path. It has no telemetry or ledger network client.</p>
-        <p>Command argument values, stdin, raw stdout and stderr, environment variables, source files, prompts, and transcripts are not stored in the version-1 ledger.</p>
+        <p>Command argument values, command stdin, raw stdout and stderr, environment variables, source files, prompts, and transcripts are not stored.</p>
+        <p>Finding text and closure notes are stored only when you submit them through a file or standard input. They remain in the local ledger until you delete the ledger file.</p>
       </section>
 
       <section aria-labelledby="control-title">
