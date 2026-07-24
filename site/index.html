@@ -3,15 +3,15 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Motus Work Ledger | A local record of failures and fixes</title>
-  <meta name="description" content="Motus connects a failed command, your explanation, and the successful run after the fix in one local, searchable ledger.">
+  <title>Motus Work Ledger | Keep what you learn from a failed command</title>
+  <meta name="description" content="Motus records selected facts about a failed command, the likely cause and next step you add, and the successful run after the fix.">
   <link rel="canonical" href="https://www.motussupra.com/">
   <meta property="og:type" content="website">
   <meta property="og:title" content="Motus Work Ledger">
-  <meta property="og:description" content="Keep the failed run, your explanation, and the successful run together.">
+  <meta property="og:description" content="Logs show what happened. Motus keeps what you choose to save from the work.">
   <meta property="og:url" content="https://www.motussupra.com/">
   <meta property="og:image" content="https://www.motussupra.com/assets/og-image.png">
-  <meta property="og:image:alt" content="Motus Work Ledger. A local record of failures and fixes.">
+  <meta property="og:image:alt" content="Motus Work Ledger. Logs show what happened. Keep what you learned.">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="theme-color" content="#f7f8fa">
   <link rel="icon" href="./assets/favicon.svg" type="image/svg+xml">
@@ -41,15 +41,15 @@
   <main id="main">
     <section class="hero shell" aria-labelledby="hero-title">
       <div class="hero-copy">
-        <h1 id="hero-title">A local record of failures and fixes.</h1>
-        <p class="hero-lede">Motus connects a failed command, your explanation, and the successful run after the fix. Search the ledger when the problem returns.</p>
+        <h1 id="hero-title">Logs show what happened. Keep what you learned.</h1>
+        <p class="hero-lede">Motus records selected facts about the failed command. You add the likely cause and next step, then link the successful run after the fix. Search it when the problem returns.</p>
         <div class="hero-actions">
           <a class="button" href="#install">Install Motus</a>
           <a class="text-link" href="#how-it-works">See the workflow</a>
         </div>
       </div>
 
-      <div class="terminal" aria-label="A failed run, finding, successful resolution, and later retrieval">
+      <div class="terminal" aria-label="A failed run, saved explanation, successful resolution, and later retrieval">
         <div class="terminal-bar" aria-hidden="true">
           <span></span><span></span><span></span>
           <strong>motus</strong>
@@ -59,7 +59,8 @@ npm test
 run_0370...  failure
 
 <span class="quiet">02  YOUR FINDING</span>
-The generated file was stale.
+Likely cause: generation skipped
+Next: regenerate, then test
 
 <span class="quiet">03  SUCCESSFUL RUN</span>
 npm test
@@ -79,7 +80,7 @@ finding_1457...  resolved</code></pre>
     <section class="section shell" id="how-it-works" aria-labelledby="flow-title">
       <div class="section-intro">
         <h2 id="flow-title">How Motus works.</h2>
-        <p>A run is one command execution. A finding is the short note you keep about a failure. Motus links the failed run, your finding, and the successful run after the fix.</p>
+        <p>A run is one command execution. A finding is what you choose to save about a failure: what happened, the likely cause, or what to try next.</p>
       </div>
 
       <ol class="flow" aria-label="Motus finding workflow">
@@ -92,7 +93,7 @@ finding_1457...  resolved</code></pre>
         <li>
           <span class="flow-number">02</span>
           <strong>Add a finding</strong>
-          <p>Save the detail you will need if the failure returns.</p>
+          <p>Save what you learned and the next step worth trying.</p>
           <code>motus finding add</code>
         </li>
         <li>
@@ -113,16 +114,18 @@ finding_1457...  resolved</code></pre>
     <section class="section shell" id="example" aria-labelledby="example-title">
       <div class="section-intro">
         <h2 id="example-title">Find what worked the last time.</h2>
-        <p>Motus output with shortened IDs.</p>
+        <p>Abridged Motus output with shortened IDs.</p>
       </div>
 
       <div class="receipt-layout">
         <div class="example-code">
-          <pre class="receipt-code" tabindex="0"><code>$ motus finding list --query stale
+          <pre class="receipt-code" tabindex="0"><code>$ motus finding list --query generated
 finding_1457...  resolved
 The generated file was stale.
 
 $ motus finding show finding_1457...
+Hypothesis:    Generation did not run before the test.
+Next step:     Regenerate the file, then rerun the test.
 Origin run:    run_0370...  failure
 Resolving run: run_c588...  success
 Closure note: Refreshed the generated file
@@ -131,8 +134,8 @@ Closure note: Refreshed the generated file
         <div class="receipt-copy">
           <h3>Run facts</h3>
           <p>Command name, Git state, timing, exit status, outcome, and output counts.</p>
-          <h3>Your finding</h3>
-          <p>A summary, likely cause, and next step that you choose to save.</p>
+          <h3>What you save</h3>
+          <p>A summary, likely cause, and next step that you choose to keep.</p>
           <h3>Resolution</h3>
           <p>A note and a link to the successful run after the fix.</p>
         </div>
@@ -165,11 +168,15 @@ Keep why this failed:
         </div>
         <div class="quickstep">
           <div class="quickstep-copy">
-            <div class="quickstep-title"><span>3</span><h3>Save a finding</h3></div>
-            <p>Copy the printed command. Type a short note and finish input with Ctrl-D, or Ctrl-Z and Enter on Windows. Motus prints a finding ID.</p>
+            <div class="quickstep-title"><span>3</span><h3>Save what you learned</h3></div>
+            <p>Copy the printed command and add <code>--format json</code>. Paste a summary, likely cause, and next step, then finish input with Ctrl-D, or Ctrl-Z and Enter on Windows.</p>
           </div>
-          <pre tabindex="0"><code>$ motus finding add --run run_0370... --file -
-The generated file was stale.
+          <pre tabindex="0"><code>$ motus finding add --run run_0370... --format json --file -
+{
+  "summary": "The generated file was stale.",
+  "hypothesis": "Generation was skipped.",
+  "next_step": "Regenerate, then test."
+}
 Recorded finding_1457... (open)</code></pre>
         </div>
         <div class="quickstep">
@@ -232,15 +239,15 @@ $ motus finding list --query stale</code></pre>
       <dl>
         <div>
           <dt>Why not Git, shell history, or CI logs?</dt>
-          <dd>Git tracks source changes; shell history and CI keep commands and logs. Motus connects the failed run, your note, and the successful run.</dd>
+          <dd>Git shows what changed. Shell history and CI show what ran. Motus keeps your explanation connected to both the failed and successful run, then makes that record searchable.</dd>
+        </div>
+        <div>
+          <dt>When is a finding worth saving?</dt>
+          <dd>When a failure took real investigation, crossed tools or sessions, or is likely to return. Routine failures do not need a finding.</dd>
         </div>
         <div>
           <dt>Does Motus store raw command output?</dt>
-          <dd>No. Motus streams output normally and records only counts. It stores finding text only when you add it.</dd>
-        </div>
-        <div>
-          <dt>What does a receipt establish?</dt>
-          <dd>A receipt is a repeatable JSON view of a closed run. Its digest detects changes to the receipt body. It is not a signature. <a href="./security.html">Read the security model.</a></dd>
+          <dd>No. Output continues to your terminal or CI log. Motus records counts and stores only the finding text you choose to add.</dd>
         </div>
       </dl>
     </section>
@@ -248,8 +255,8 @@ $ motus finding list --query stale</code></pre>
     <section class="closing">
       <div class="shell closing-inner">
         <div>
-          <h2>Record the next failure you solve.</h2>
-          <p>Keep the failed run, your explanation, and the successful run together.</p>
+          <h2>Keep the answer for next time.</h2>
+          <p>Record the failed run, what you learned, and the successful check.</p>
         </div>
         <a class="button button-light" href="#install">Install Motus</a>
       </div>
