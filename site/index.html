@@ -81,7 +81,7 @@ finding_1457...  resolved</code></pre>
       <div class="section-intro">
         <h2 id="flow-title">How Motus works.</h2>
         <p>A run is one command execution. A finding is what you choose to save about a failure: what happened, the likely cause, or what to try next.</p>
-        <p>Each project keeps its ledger in <code>.motus/ledger.db</code>. People and coding agents use the same CLI to record and search it.</p>
+        <p>A person, coding agent, script, or CI job calls the CLI from the workflow it already runs. By default, Motus writes recorded runs and findings to <code>.motus/ledger.db</code>. Anyone using that same ledger can search the records later.</p>
       </div>
 
       <ol class="flow" aria-label="Motus finding workflow">
@@ -110,6 +110,7 @@ finding_1457...  resolved</code></pre>
           <code>motus finding list --query</code>
         </li>
       </ol>
+      <p class="documentation-link">Using a coding agent? <a href="https://github.com/motus-os/work-ledger#use-motus-with-an-agent">Copy the project instructions</a> that tell it when to search, record, and resolve findings.</p>
     </section>
 
     <section class="section shell" id="example" aria-labelledby="example-title">
