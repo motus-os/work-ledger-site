@@ -276,7 +276,7 @@ dd {
   margin: 0;
   padding: clamp(1.4rem, 3vw, 2.2rem);
   overflow-x: auto;
-  font-size: clamp(0.76rem, 1.2vw, 0.9rem);
+  font-size: clamp(0.84rem, 1.2vw, 0.9rem);
   line-height: 1.8;
 }
 
@@ -466,12 +466,20 @@ dd {
   border-radius: 8px;
   background: var(--surface);
   color: var(--ink-soft);
-  font-size: 0.82rem;
+  font-size: 0.86rem;
   line-height: 1.75;
 }
 
 .quickstep pre {
   padding: 1.2rem 1.35rem;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.quickstep > p {
+  max-width: 46rem;
+  margin: 0;
+  color: var(--muted);
 }
 
 .documentation-link {

@@ -26,9 +26,12 @@ const forbiddenPhrases = [
 ];
 const requiredPhrases = {
   "index.html": [
-    'id="findings"',
+    'id="how-it-works"',
+    'id="install"',
+    "Keep the fix with the failure.",
+    "go install github.com/motus-os/work-ledger/cmd/motus@latest",
     "finding list --query stale",
-    "Findings stay separate from run receipts.",
+    "The run keeps the facts. The finding keeps the reason.",
   ],
   "security.html": [
     "event and finding payload hashes",
@@ -174,9 +177,13 @@ for (const required of [
   "assets/site.css",
   "assets/favicon.svg",
   "assets/og-image.png",
+  "assets/og-image.svg",
   "robots.txt",
 ]) {
   if (!fs.existsSync(path.join(siteRoot, required))) fail(`missing ${required}`);
+}
+if (!read("assets/og-image.svg").includes("Keep the fix")) {
+  fail("site/assets/og-image.svg: social preview message does not match the homepage");
 }
 
 const trackedJunk = [".DS_Store", "Thumbs.db"];

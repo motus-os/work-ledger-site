@@ -180,6 +180,10 @@ try {
   if ((await page.evaluate(() => location.hash)) !== "#how-it-works") {
     throw new Error("How it works navigation did not resolve its anchor");
   }
+  await page.locator('a[href="#install"]').first().click();
+  if ((await page.evaluate(() => location.hash)) !== "#install") {
+    throw new Error("Install navigation did not resolve its anchor");
+  }
   await context.close();
 
   const fallbackContext = await browser.newContext({ viewport: { width: 1280, height: 900 } });
@@ -224,7 +228,7 @@ try {
     if (fallbackPage.url() !== repositoryPagesURL.href) {
       errors.push(`custom 404 home resolved to ${fallbackPage.url()}`);
     }
-    if ((await fallbackPage.locator("h1").innerText()) !== "Keep a local record of the commands that did the work.") {
+    if ((await fallbackPage.locator("h1").innerText()) !== "Keep the fix with the failure.") {
       errors.push("custom 404 home link did not load the site index");
     }
     await fallbackPage.close();
