@@ -472,6 +472,8 @@ dd {
 
 .quickstep pre {
   padding: 1.2rem 1.35rem;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
 }
 
 .quickstep > p {

@@ -44,7 +44,7 @@
         <h1 id="hero-title">Keep the fix with the failure.</h1>
         <p class="hero-lede">When a command exposes a problem, the reason and the fix often end up split across terminal output, chat, commits, and memory. Motus connects the failed run, the explanation you want to keep, and the successful run that resolved it, so the next attempt can start with what worked.</p>
         <div class="hero-actions">
-          <a class="button" href="https://github.com/motus-os/work-ledger/releases/latest">Download Motus</a>
+          <a class="button" href="#install">Install Motus</a>
           <a class="text-link" href="#how-it-works">See the workflow</a>
         </div>
       </div>
@@ -148,21 +148,20 @@ Closure note: Refreshed the generated file
       <div class="quickstart">
         <div class="quickstep">
           <div><span>1</span><h3>Install</h3></div>
-          <p>Choose the archive for your platform on <a href="https://github.com/motus-os/work-ledger/releases/latest">GitHub Releases</a>. Verify it with <code>checksums.txt</code>, unpack it, and put <code>motus</code> on your path.</p>
+          <pre tabindex="0"><code>go install github.com/motus-os/work-ledger/cmd/motus@latest</code></pre>
+          <p>Requires Go 1.26.5 or newer. You can also use a verified archive from <a href="https://github.com/motus-os/work-ledger/releases/latest">GitHub Releases</a>.</p>
         </div>
         <div class="quickstep">
           <div><span>2</span><h3>Record and explain</h3></div>
           <p>Run the command Motus prints after the failure. Enter one line, then press Ctrl-D on macOS or Linux. On Windows, press Ctrl-Z and then Enter.</p>
-          <pre tabindex="0"><code>motus wrap -- ./verify-generated.sh
+          <pre tabindex="0"><code>motus wrap -- YOUR_COMMAND
 motus finding add --run FAILED_RUN_ID --file -</code></pre>
         </div>
         <div class="quickstep">
           <div><span>3</span><h3>Resolve and find later</h3></div>
           <p>Run the fix through Motus. Use the successful run ID, enter a closure note, then finish input the same way.</p>
-          <pre tabindex="0"><code>motus wrap -- ./verify-generated.sh
-motus finding close FINDING_ID \
-  --disposition resolved \
-  --run SUCCESS_RUN_ID --file -
+          <pre tabindex="0"><code>motus wrap -- YOUR_COMMAND
+motus finding close FINDING_ID --disposition resolved --run SUCCESS_RUN_ID --file -
 motus finding list --query stale</code></pre>
         </div>
       </div>
@@ -225,7 +224,7 @@ motus finding list --query stale</code></pre>
           <h2>Keep the next failure and its fix.</h2>
           <p>Keep the run, the reason, and the successful resolution together.</p>
         </div>
-        <a class="button button-light" href="https://github.com/motus-os/work-ledger/releases/latest">Download Motus</a>
+        <a class="button button-light" href="#install">Install Motus</a>
       </div>
     </section>
   </main>
