@@ -10,7 +10,7 @@ const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const siteRoot = path.join(root, "site");
 const origin = "http://127.0.0.1:4173";
 const baseURL = `${origin}/site`;
-const repositoryPagesURL = new URL("https://motus-os.github.io/work-ledger-site/");
+const productionURL = new URL("https://www.motussupra.com/");
 const pages = ["/", "/security.html", "/privacy.html", "/404.html"];
 const profiles = [
   { name: "desktop-light", viewport: { width: 1440, height: 1000 }, colorScheme: "light", reducedMotion: "no-preference" },
@@ -67,16 +67,16 @@ async function startServer() {
   });
 }
 
-function isRepositoryPagesURL(url) {
-  return url.origin === repositoryPagesURL.origin
-    && url.pathname.startsWith(repositoryPagesURL.pathname);
+function isProductionURL(url) {
+  return url.origin === productionURL.origin
+    && url.pathname.startsWith(productionURL.pathname);
 }
 
-async function routeRepositoryPages(context) {
-  await context.route(/^https:\/\/motus-os\.github\.io\/work-ledger-site(?:\/.*)?$/, async (route) => {
+async function routeProductionSite(context) {
+  await context.route(/^https:\/\/www\.motussupra\.com(?:\/.*)?$/, async (route) => {
     const requested = new URL(route.request().url());
     const relativePath = decodeURIComponent(
-      requested.pathname.slice(repositoryPagesURL.pathname.length),
+      requested.pathname.slice(productionURL.pathname.length),
     ) || "index.html";
     const file = fileWithinSite(relativePath);
     if (!file || !fs.existsSync(file) || !fs.statSync(file).isFile()) {
@@ -106,7 +106,7 @@ try {
       colorScheme: profile.colorScheme,
       reducedMotion: profile.reducedMotion,
     });
-    await routeRepositoryPages(context);
+    await routeProductionSite(context);
 
     for (const route of pages) {
       const page = await context.newPage();
@@ -117,7 +117,7 @@ try {
       page.on("pageerror", (error) => errors.push(`page: ${error.message}`));
       page.on("request", (request) => {
         const requested = new URL(request.url());
-        if (requested.origin !== origin && !isRepositoryPagesURL(requested)) {
+        if (requested.origin !== origin && !isProductionURL(requested)) {
           errors.push(`network: ${request.url()}`);
         }
       });
@@ -173,7 +173,7 @@ try {
   }
 
   const context = await browser.newContext({ viewport: { width: 1280, height: 900 } });
-  await routeRepositoryPages(context);
+  await routeProductionSite(context);
   const page = await context.newPage();
   await page.goto(baseURL, { waitUntil: "networkidle" });
   await page.locator('a[href="#how-it-works"]').first().click();
@@ -187,7 +187,7 @@ try {
   await context.close();
 
   const fallbackContext = await browser.newContext({ viewport: { width: 1280, height: 900 } });
-  await routeRepositoryPages(fallbackContext);
+  await routeProductionSite(fallbackContext);
   for (const route of ["/nested/final-review-miss", "/directory-style/"]) {
     const fallbackPage = await fallbackContext.newPage();
     const navigationURL = `${baseURL}${route}`;
@@ -195,7 +195,7 @@ try {
     fallbackPage.on("pageerror", (error) => errors.push(`page: ${error.message}`));
     fallbackPage.on("request", (request) => {
       const requested = new URL(request.url());
-      if (requested.origin !== origin && !isRepositoryPagesURL(requested)) {
+      if (requested.origin !== origin && !isProductionURL(requested)) {
         errors.push(`network: ${request.url()}`);
       }
     });
@@ -213,9 +213,9 @@ try {
     const bodyBackground = await fallbackPage.evaluate(() => getComputedStyle(document.body).backgroundColor);
     if (bodyBackground !== "rgb(247, 248, 250)") errors.push(`custom 404 stylesheet not applied: ${bodyBackground}`);
     const expectedLinks = [
-      repositoryPagesURL.href,
-      new URL("security.html", repositoryPagesURL).href,
-      new URL("privacy.html", repositoryPagesURL).href,
+      productionURL.href,
+      new URL("security.html", productionURL).href,
+      new URL("privacy.html", productionURL).href,
     ];
     const actualLinks = await fallbackPage.locator('a.brand, a[href$="security.html"], a[href$="privacy.html"]')
       .evaluateAll((elements) => elements.map((element) => element.href));
@@ -225,7 +225,7 @@ try {
 
     await fallbackPage.locator("a.button").click();
     await fallbackPage.waitForLoadState("networkidle");
-    if (fallbackPage.url() !== repositoryPagesURL.href) {
+    if (fallbackPage.url() !== productionURL.href) {
       errors.push(`custom 404 home resolved to ${fallbackPage.url()}`);
     }
     if ((await fallbackPage.locator("h1").innerText()) !== "Keep the fix with the failure.") {
