@@ -81,6 +81,7 @@ finding_1457...  resolved</code></pre>
       <div class="section-intro">
         <h2 id="flow-title">How Motus works.</h2>
         <p>A run is one command execution. A finding is what you choose to save about a failure: what happened, the likely cause, or what to try next.</p>
+        <p>Each project keeps its ledger in <code>.motus/ledger.db</code>. People and coding agents use the same CLI to record and search it.</p>
       </div>
 
       <ol class="flow" aria-label="Motus finding workflow">
@@ -152,9 +153,11 @@ Closure note: Refreshed the generated file
         <div class="quickstep">
           <div class="quickstep-copy">
             <div class="quickstep-title"><span>1</span><h3>Install Motus</h3></div>
-            <p>Use Go 1.26.5 or newer, or download a verified archive from <a href="https://github.com/motus-os/work-ledger/releases/latest">GitHub Releases</a>.</p>
+            <p>Use Go 1.26.5 or newer, or download a verified archive from <a href="https://github.com/motus-os/work-ledger/releases/latest">GitHub Releases</a>. Go installs the binary in <code>GOBIN</code>, or <code>GOPATH/bin</code> when unset. Put that directory on <code>PATH</code>.</p>
+            <p>Motus writes this project's ledger to <code>.motus/ledger.db</code>. Add <code>.motus/</code> to <code>.gitignore</code> before recording work.</p>
           </div>
-          <pre tabindex="0"><code>$ go install github.com/motus-os/work-ledger/cmd/motus@latest</code></pre>
+          <pre tabindex="0"><code>$ go install github.com/motus-os/work-ledger/cmd/motus@latest
+$ motus version</code></pre>
         </div>
         <div class="quickstep">
           <div class="quickstep-copy">
