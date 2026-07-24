@@ -9,10 +9,9 @@ const expectedPages = ["index.html", "security.html", "privacy.html", "404.html"
 const allowedExternalOrigins = new Set([
   "https://docs.github.com",
   "https://github.com",
-  "https://motus-os.github.io",
   "https://www.motussupra.com",
 ]);
-const repositoryPagesURL = new URL("https://motus-os.github.io/work-ledger-site/");
+const productionURL = new URL("https://www.motussupra.com/");
 const forbiddenPhrases = [
   "ai-powered",
   "game-changing",
@@ -106,20 +105,20 @@ for (const page of expectedPages) {
     if (/^(mailto:|tel:)/.test(reference)) continue;
     if (/^https:\/\//.test(reference)) {
       const external = new URL(reference);
-      if (external.origin === repositoryPagesURL.origin) {
-        if (!external.pathname.startsWith(repositoryPagesURL.pathname)) {
-          fail(`${label}: repository Pages URL escapes ${repositoryPagesURL.pathname}: ${reference}`);
+      if (external.origin === productionURL.origin) {
+        if (!external.pathname.startsWith(productionURL.pathname)) {
+          fail(`${label}: production URL escapes ${productionURL.pathname}: ${reference}`);
           continue;
         }
-        const targetPage = external.pathname.slice(repositoryPagesURL.pathname.length) || "index.html";
+        const targetPage = external.pathname.slice(productionURL.pathname.length) || "index.html";
         if (!fs.existsSync(path.join(siteRoot, targetPage))) {
-          fail(`${label}: missing repository Pages target ${reference}`);
+          fail(`${label}: missing production target ${reference}`);
           continue;
         }
         if (external.hash && targetPage.endsWith(".html")) {
           const targetHTML = read(targetPage);
           if (!idsIn(targetHTML).has(external.hash.slice(1))) {
-            fail(`${label}: broken repository Pages anchor ${reference}`);
+            fail(`${label}: broken production anchor ${reference}`);
           }
         }
         continue;
@@ -134,7 +133,7 @@ for (const page of expectedPages) {
       continue;
     }
     if (reference.startsWith("/")) {
-      fail(`${label}: root-relative local URL is not portable to the repository Pages path: ${reference}`);
+      fail(`${label}: root-relative local URL is not portable to the repository preview path: ${reference}`);
       continue;
     }
 
@@ -154,9 +153,9 @@ for (const page of expectedPages) {
 
   for (const match of html.matchAll(/https:\/\/[^"'\s<]+/g)) {
     const external = new URL(match[0]);
-    if (external.origin === repositoryPagesURL.origin
-      && !external.pathname.startsWith(repositoryPagesURL.pathname)) {
-      fail(`${label}: repository Pages URL escapes ${repositoryPagesURL.pathname}: ${match[0]}`);
+    if (external.origin === productionURL.origin
+      && !external.pathname.startsWith(productionURL.pathname)) {
+      fail(`${label}: production URL escapes ${productionURL.pathname}: ${match[0]}`);
       continue;
     }
     if (!allowedExternalOrigins.has(external.origin)) {
@@ -170,7 +169,7 @@ if (/gradient\s*\(/i.test(css)) fail("site/assets/site.css: gradients are not pe
 if (/\u2013|\u2014/.test(css)) fail("site/assets/site.css: en or em dash found");
 if (/url\(["']?https?:/i.test(css)) fail("site/assets/site.css: remote asset found");
 if (/url\(\s*["']?\/(?!\/)/i.test(css)) {
-  fail("site/assets/site.css: root-relative asset URL is not portable to the repository Pages path");
+  fail("site/assets/site.css: root-relative asset URL is not portable to the repository preview path");
 }
 
 for (const required of [
