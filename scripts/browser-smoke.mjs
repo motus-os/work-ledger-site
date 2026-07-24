@@ -228,7 +228,7 @@ try {
     if (fallbackPage.url() !== productionURL.href) {
       errors.push(`custom 404 home resolved to ${fallbackPage.url()}`);
     }
-    if ((await fallbackPage.locator("h1").innerText()) !== "A local record of failures and fixes.") {
+    if ((await fallbackPage.locator("h1").innerText()) !== "Logs show what happened. Keep what you learned.") {
       errors.push("custom 404 home link did not load the site index");
     }
     await fallbackPage.close();

@@ -8,8 +8,8 @@
   </g>
   <text x="168" y="119" fill="#101217" font-family="Arial, Helvetica, sans-serif" font-size="30" font-weight="700">Motus Work Ledger</text>
   <line x1="72" y1="190" x2="1128" y2="190" stroke="#dce1e8" stroke-width="2"/>
-  <text x="72" y="302" fill="#101217" font-family="Arial, Helvetica, sans-serif" font-size="76" font-weight="700">A local record of</text>
-  <text x="72" y="392" fill="#101217" font-family="Arial, Helvetica, sans-serif" font-size="76" font-weight="700">failures and fixes.</text>
-  <text x="72" y="474" fill="#606978" font-family="Arial, Helvetica, sans-serif" font-size="29">Connect a failed command to the successful run after the fix.</text>
+  <text x="72" y="302" fill="#101217" font-family="Arial, Helvetica, sans-serif" font-size="72" font-weight="700">Logs show what happened.</text>
+  <text x="72" y="392" fill="#101217" font-family="Arial, Helvetica, sans-serif" font-size="72" font-weight="700">Keep what you learned.</text>
+  <text x="72" y="474" fill="#606978" font-family="Arial, Helvetica, sans-serif" font-size="29">Link the failed run, your explanation, and the successful run.</text>
   <rect x="72" y="535" width="1056" height="3" fill="#2456e6"/>
 </svg>

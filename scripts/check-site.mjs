@@ -30,10 +30,12 @@ const requiredPhrases = {
   "index.html": [
     'id="how-it-works"',
     'id="install"',
-    "A local record of failures and fixes.",
+    "Logs show what happened. Keep what you learned.",
+    "You add the likely cause and next step",
     "go install github.com/motus-os/work-ledger/cmd/motus@latest",
     "finding list --query stale",
     "How Motus works.",
+    "When is a finding worth saving?",
   ],
   "security.html": [
     "event and finding payload hashes",
@@ -184,7 +186,7 @@ for (const required of [
 ]) {
   if (!fs.existsSync(path.join(siteRoot, required))) fail(`missing ${required}`);
 }
-if (!read("assets/og-image.svg").includes("A local record of")) {
+if (!read("assets/og-image.svg").includes("Logs show what happened.")) {
   fail("site/assets/og-image.svg: social preview message does not match the homepage");
 }
 
