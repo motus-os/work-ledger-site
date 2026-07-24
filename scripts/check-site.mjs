@@ -17,6 +17,9 @@ const forbiddenPhrases = [
   "game-changing",
   "honest answers",
   "in today's fast-paced",
+  "keep the fix with the failure",
+  "leverage",
+  "next-generation",
   "revolutionize",
   "seamless",
   "supercharge",
@@ -27,17 +30,17 @@ const requiredPhrases = {
   "index.html": [
     'id="how-it-works"',
     'id="install"',
-    "Keep the fix with the failure.",
+    "A local record of failures and fixes.",
     "go install github.com/motus-os/work-ledger/cmd/motus@latest",
     "finding list --query stale",
-    "The run keeps the facts. The finding keeps the reason.",
+    "How Motus works.",
   ],
   "security.html": [
     "event and finding payload hashes",
-    "Review that content before recording it.",
+    "Review that text before recording it.",
   ],
   "privacy.html": [
-    "Finding text and closure notes are stored only when you submit them",
+    "Motus stores finding text and closure notes only when you submit them",
   ],
 };
 const failures = [];
@@ -181,8 +184,19 @@ for (const required of [
 ]) {
   if (!fs.existsSync(path.join(siteRoot, required))) fail(`missing ${required}`);
 }
-if (!read("assets/og-image.svg").includes("Keep the fix")) {
+if (!read("assets/og-image.svg").includes("A local record of")) {
   fail("site/assets/og-image.svg: social preview message does not match the homepage");
+}
+
+const homepage = read("index.html");
+const heroHeading = homepage.match(/<h1 id="hero-title">([^<]+)<\/h1>/)?.[1] || "";
+const heroLede = homepage.match(/<p class="hero-lede">([^<]+)<\/p>/)?.[1] || "";
+const wordCount = (text) => text.trim().split(/\s+/).filter(Boolean).length;
+if (wordCount(heroHeading) > 9) {
+  fail(`site/index.html: hero heading exceeds 9 words (${wordCount(heroHeading)})`);
+}
+if (wordCount(heroLede) > 30) {
+  fail(`site/index.html: hero introduction exceeds 30 words (${wordCount(heroLede)})`);
 }
 
 const trackedJunk = [".DS_Store", "Thumbs.db"];

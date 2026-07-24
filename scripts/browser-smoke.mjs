@@ -207,7 +207,7 @@ try {
 
     const response = await fallbackPage.goto(navigationURL, { waitUntil: "networkidle" });
     if (response?.status() !== 404) errors.push(`missing-page navigation returned ${response?.status()}`);
-    if ((await fallbackPage.locator("h1").innerText()) !== "That page is not in the ledger.") {
+    if ((await fallbackPage.locator("h1").innerText()) !== "Page not found.") {
       errors.push("custom 404 content was not served");
     }
     const bodyBackground = await fallbackPage.evaluate(() => getComputedStyle(document.body).backgroundColor);
@@ -228,7 +228,7 @@ try {
     if (fallbackPage.url() !== productionURL.href) {
       errors.push(`custom 404 home resolved to ${fallbackPage.url()}`);
     }
-    if ((await fallbackPage.locator("h1").innerText()) !== "Keep the fix with the failure.") {
+    if ((await fallbackPage.locator("h1").innerText()) !== "A local record of failures and fixes.") {
       errors.push("custom 404 home link did not load the site index");
     }
     await fallbackPage.close();

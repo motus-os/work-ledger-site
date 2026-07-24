@@ -3,15 +3,15 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Motus Work Ledger | Keep the fix with the failure</title>
-  <meta name="description" content="Motus connects a command run, the reason it mattered, and the successful run that resolved it in one local, searchable record.">
+  <title>Motus Work Ledger | A local record of failures and fixes</title>
+  <meta name="description" content="Motus connects a failed command, your explanation, and the successful run after the fix in one local, searchable ledger.">
   <link rel="canonical" href="https://www.motussupra.com/">
   <meta property="og:type" content="website">
   <meta property="og:title" content="Motus Work Ledger">
-  <meta property="og:description" content="Keep the run, the reason, and the successful resolution together.">
+  <meta property="og:description" content="Keep the failed run, your explanation, and the successful run together.">
   <meta property="og:url" content="https://www.motussupra.com/">
   <meta property="og:image" content="https://www.motussupra.com/assets/og-image.png">
-  <meta property="og:image:alt" content="Motus Work Ledger. Keep the fix with the failure.">
+  <meta property="og:image:alt" content="Motus Work Ledger. A local record of failures and fixes.">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="theme-color" content="#f7f8fa">
   <link rel="icon" href="./assets/favicon.svg" type="image/svg+xml">
@@ -41,8 +41,8 @@
   <main id="main">
     <section class="hero shell" aria-labelledby="hero-title">
       <div class="hero-copy">
-        <h1 id="hero-title">Keep the fix with the failure.</h1>
-        <p class="hero-lede">When a command exposes a problem, the reason and the fix often end up split across terminal output, chat, commits, and memory. Motus connects the failed run, the explanation you want to keep, and the successful run that resolved it, so the next attempt can start with what worked.</p>
+        <h1 id="hero-title">A local record of failures and fixes.</h1>
+        <p class="hero-lede">Motus connects a failed command, your explanation, and the successful run after the fix. Search the ledger when the problem returns.</p>
         <div class="hero-actions">
           <a class="button" href="#install">Install Motus</a>
           <a class="text-link" href="#how-it-works">See the workflow</a>
@@ -52,22 +52,22 @@
       <div class="terminal" aria-label="A failed run, finding, successful resolution, and later retrieval">
         <div class="terminal-bar" aria-hidden="true">
           <span></span><span></span><span></span>
-          <strong>one problem, one resolution</strong>
+          <strong>motus</strong>
         </div>
         <pre tabindex="0"><code><span class="quiet">01  FAILED RUN</span>
-verify-generated.sh
-run_0d27...  failure
+npm test
+run_0370...  failure
 
-<span class="quiet">02  FINDING</span>
+<span class="quiet">02  YOUR FINDING</span>
 The generated file was stale.
 
-<span class="quiet">03  RESOLVING RUN</span>
-verify-generated.sh
-run_c0e5...  <span class="success">success</span>
+<span class="quiet">03  SUCCESSFUL RUN</span>
+npm test
+run_c588...  <span class="success">success</span>
 
-<span class="quiet">04  LATER</span>
+<span class="quiet">04  SEARCH LATER</span>
 finding list --query stale
-finding_c896...  resolved</code></pre>
+finding_1457...  resolved</code></pre>
         <div class="terminal-foot">
           <span>local</span>
           <span>run-linked</span>
@@ -78,8 +78,8 @@ finding_c896...  resolved</code></pre>
 
     <section class="section shell" id="how-it-works" aria-labelledby="flow-title">
       <div class="section-intro">
-        <h2 id="flow-title">The run keeps the facts. The finding keeps the reason.</h2>
-        <p>Motus sits around a command you already use. It records selected machine facts, then lets you add the explanation you choose to keep.</p>
+        <h2 id="flow-title">How Motus works.</h2>
+        <p>A run is one command execution. A finding is the short note you keep about a failure. Motus links the failed run, your finding, and the successful run after the fix.</p>
       </div>
 
       <ol class="flow" aria-label="Motus finding workflow">
@@ -91,20 +91,20 @@ finding_c896...  resolved</code></pre>
         </li>
         <li>
           <span class="flow-number">02</span>
-          <strong>Explain</strong>
-          <p>If the run exposes a failure you may see again, keep the cause or next step.</p>
+          <strong>Add a finding</strong>
+          <p>Save the detail you will need if the failure returns.</p>
           <code>motus finding add</code>
         </li>
         <li>
           <span class="flow-number">03</span>
-          <strong>Resolve</strong>
-          <p>Connect the finding to the successful run that fixed it.</p>
+          <strong>Link the fix</strong>
+          <p>After the fix works, link the finding to that successful run.</p>
           <code>motus finding close</code>
         </li>
         <li>
           <span class="flow-number">04</span>
           <strong>Find later</strong>
-          <p>Search your words and inspect both runs when the problem returns.</p>
+          <p>Search the finding and inspect both runs when the problem returns.</p>
           <code>motus finding list --query</code>
         </li>
       </ol>
@@ -112,57 +112,84 @@ finding_c896...  resolved</code></pre>
 
     <section class="section shell" id="example" aria-labelledby="example-title">
       <div class="section-intro">
-        <h2 id="example-title">The record is there when the problem returns.</h2>
-        <p>This example was captured from Motus, then condensed for space. The displayed IDs are shortened.</p>
+        <h2 id="example-title">Find what worked the last time.</h2>
+        <p>Motus output with shortened IDs.</p>
       </div>
 
       <div class="receipt-layout">
         <div class="example-code">
           <pre class="receipt-code" tabindex="0"><code>$ motus finding list --query stale
-finding_c896...  resolved
+finding_1457...  resolved
 The generated file was stale.
 
-$ motus finding show finding_c896...
-Origin run:    run_0d27...  failure
-Resolving run: run_c0e5...  success
+$ motus finding show finding_1457...
+Origin run:    run_0370...  failure
+Resolving run: run_c588...  success
 Closure note: Refreshed the generated file
               before running the check.</code></pre>
         </div>
         <div class="receipt-copy">
-          <h3>The run supplies the facts</h3>
-          <p>Motus records the executable name, Git state, timing, exit status, outcome, and output counts.</p>
-          <h3>You supply the meaning</h3>
-          <p>The finding stores the summary, hypothesis, or next step you deliberately submit through a file or standard input.</p>
-          <h3>The fix stays traceable</h3>
-          <p>Resolving a finding connects it to a closed successful run without changing either run receipt.</p>
+          <h3>Run facts</h3>
+          <p>Command name, Git state, timing, exit status, outcome, and output counts.</p>
+          <h3>Your finding</h3>
+          <p>A summary, likely cause, and next step that you choose to save.</p>
+          <h3>Resolution</h3>
+          <p>A note and a link to the successful run after the fix.</p>
         </div>
       </div>
     </section>
 
     <section class="section shell" id="install" aria-labelledby="install-title">
       <div class="section-intro">
-        <h2 id="install-title">Use it on the next failure.</h2>
-        <p>Download the current release, record the failed run, connect the successful fix, then search for it again.</p>
+        <h2 id="install-title">Try the full workflow.</h2>
+        <p>This example uses <code>npm test</code>. Replace it with any command you already run. Paths and IDs are shortened.</p>
       </div>
 
       <div class="quickstart">
         <div class="quickstep">
-          <div><span>1</span><h3>Install</h3></div>
-          <pre tabindex="0"><code>go install github.com/motus-os/work-ledger/cmd/motus@latest</code></pre>
-          <p>Requires Go 1.26.5 or newer. You can also use a verified archive from <a href="https://github.com/motus-os/work-ledger/releases/latest">GitHub Releases</a>.</p>
+          <div class="quickstep-copy">
+            <div class="quickstep-title"><span>1</span><h3>Install Motus</h3></div>
+            <p>Use Go 1.26.5 or newer, or download a verified archive from <a href="https://github.com/motus-os/work-ledger/releases/latest">GitHub Releases</a>.</p>
+          </div>
+          <pre tabindex="0"><code>$ go install github.com/motus-os/work-ledger/cmd/motus@latest</code></pre>
         </div>
         <div class="quickstep">
-          <div><span>2</span><h3>Record and explain</h3></div>
-          <p>Run the command Motus prints after the failure. Enter one line, then press Ctrl-D on macOS or Linux. On Windows, press Ctrl-Z and then Enter.</p>
-          <pre tabindex="0"><code>motus wrap -- YOUR_COMMAND
-motus finding add --run FAILED_RUN_ID --file -</code></pre>
+          <div class="quickstep-copy">
+            <div class="quickstep-title"><span>2</span><h3>Record the failing command</h3></div>
+            <p>Motus prints a run ID. After a failure, it also prints the exact command for adding a finding.</p>
+          </div>
+          <pre tabindex="0"><code>$ motus wrap -- npm test
+motus: recorded run_0370... (failure)
+Keep why this failed:
+  motus finding add --run run_0370... --file -</code></pre>
         </div>
         <div class="quickstep">
-          <div><span>3</span><h3>Resolve and find later</h3></div>
-          <p>Run the fix through Motus. Use the successful run ID, enter a closure note, then finish input the same way.</p>
-          <pre tabindex="0"><code>motus wrap -- YOUR_COMMAND
-motus finding close FINDING_ID --disposition resolved --run SUCCESS_RUN_ID --file -
-motus finding list --query stale</code></pre>
+          <div class="quickstep-copy">
+            <div class="quickstep-title"><span>3</span><h3>Save a finding</h3></div>
+            <p>Copy the printed command. Type a short note and finish input with Ctrl-D, or Ctrl-Z and Enter on Windows. Motus prints a finding ID.</p>
+          </div>
+          <pre tabindex="0"><code>$ motus finding add --run run_0370... --file -
+The generated file was stale.
+Recorded finding_1457... (open)</code></pre>
+        </div>
+        <div class="quickstep">
+          <div class="quickstep-copy">
+            <div class="quickstep-title"><span>4</span><h3>Record the successful check</h3></div>
+            <p>Fix the problem and run the same command again. Keep the new run ID if it succeeds.</p>
+          </div>
+          <pre tabindex="0"><code>$ motus wrap -- npm test
+motus: recorded run_c588... (success)</code></pre>
+        </div>
+        <div class="quickstep">
+          <div class="quickstep-copy">
+            <div class="quickstep-title"><span>5</span><h3>Link and search</h3></div>
+            <p>Use the finding ID and successful run ID. Enter a closure note, finish input the same way, then search your saved words.</p>
+          </div>
+          <pre tabindex="0"><code>$ motus finding close finding_1457... --disposition resolved --run run_c588... --file -
+Refreshed the generated file before running the check.
+Closed finding_1457... (resolved)
+
+$ motus finding list --query stale</code></pre>
         </div>
       </div>
       <p class="documentation-link"><a href="https://github.com/motus-os/work-ledger#install">Read the full install and workflow guide</a></p>
@@ -170,8 +197,8 @@ motus finding list --query stale</code></pre>
 
     <section class="section shell" id="recorded" aria-labelledby="recorded-title">
       <div class="section-intro">
-        <h2 id="recorded-title">What stays in the local ledger.</h2>
-        <p>The ledger keeps machine facts about selected runs and the findings you choose to add.</p>
+        <h2 id="recorded-title">What Motus keeps.</h2>
+        <p>Run facts are captured when you use <code>motus wrap</code>. Finding text is stored only when you add it.</p>
       </div>
 
       <div class="boundary-columns">
@@ -189,10 +216,10 @@ motus finding list --query stale</code></pre>
         <div>
           <h3>Written by you</h3>
           <ul>
-            <li>finding summary and analysis</li>
+            <li>finding summary and likely cause</li>
             <li>next step, when useful</li>
             <li>resolution or dismissal note</li>
-            <li>origin and resolving run links</li>
+            <li>links to the failed and successful runs</li>
           </ul>
         </div>
       </div>
@@ -200,20 +227,20 @@ motus finding list --query stale</code></pre>
 
     <section class="section shell questions" aria-labelledby="questions-title">
       <div class="section-intro">
-        <h2 id="questions-title">Questions.</h2>
+        <h2 id="questions-title">Common questions.</h2>
       </div>
       <dl>
         <div>
           <dt>Why not Git, shell history, or CI logs?</dt>
-          <dd>Those tools preserve source changes, commands, or execution output. Motus connects a selected run, the explanation you kept, and the run that resolved it in one local record.</dd>
+          <dd>Git tracks source changes; shell history and CI keep commands and logs. Motus connects the failed run, your note, and the successful run.</dd>
         </div>
         <div>
           <dt>Does Motus store raw command output?</dt>
-          <dd>No. It streams output normally and records counts. Finding text is stored only when you add it deliberately.</dd>
+          <dd>No. Motus streams output normally and records only counts. It stores finding text only when you add it.</dd>
         </div>
         <div>
           <dt>What does a receipt establish?</dt>
-          <dd>It is a deterministic projection of a closed run in your local ledger. The included SHA-256 digest checks the receipt body against its envelope. <a href="./security.html">Read the security model.</a></dd>
+          <dd>A receipt is a repeatable JSON view of a closed run. Its digest detects changes to the receipt body. It is not a signature. <a href="./security.html">Read the security model.</a></dd>
         </div>
       </dl>
     </section>
@@ -221,8 +248,8 @@ motus finding list --query stale</code></pre>
     <section class="closing">
       <div class="shell closing-inner">
         <div>
-          <h2>Keep the next failure and its fix.</h2>
-          <p>Keep the run, the reason, and the successful resolution together.</p>
+          <h2>Record the next failure you solve.</h2>
+          <p>Keep the failed run, your explanation, and the successful run together.</p>
         </div>
         <a class="button button-light" href="#install">Install Motus</a>
       </div>

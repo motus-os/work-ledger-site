@@ -440,22 +440,32 @@ dd {
   border-bottom: 1px solid var(--rule);
 }
 
-.quickstep > div {
+.quickstep-copy {
+  min-width: 0;
+}
+
+.quickstep-title {
   display: flex;
   align-items: baseline;
   gap: 1rem;
 }
 
-.quickstep span {
+.quickstep-title span {
   color: var(--blue);
   font-family: var(--mono);
   font-size: 0.75rem;
   font-weight: 700;
 }
 
-.quickstep h3 {
+.quickstep-title h3 {
   margin: 0;
   font-size: 0.98rem;
+}
+
+.quickstep-copy p {
+  margin: 0.65rem 0 0;
+  color: var(--muted);
+  font-size: 0.92rem;
 }
 
 .quickstep pre,
@@ -474,12 +484,6 @@ dd {
   padding: 1.2rem 1.35rem;
   white-space: pre-wrap;
   overflow-wrap: anywhere;
-}
-
-.quickstep > p {
-  max-width: 46rem;
-  margin: 0;
-  color: var(--muted);
 }
 
 .documentation-link {

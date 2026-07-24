@@ -33,26 +33,26 @@
   <main id="main" class="page shell">
     <header class="page-header">
       <h1>Privacy</h1>
-      <p>The website is static. The command-line application keeps its ledger on your machine.</p>
+      <p>This website is static. Motus keeps its ledger on your machine.</p>
     </header>
 
     <div class="page-body">
       <section aria-labelledby="site-title">
         <h2 id="site-title">This website</h2>
-        <p>The site has no analytics, advertising, cookies, forms, accounts, or client-side JavaScript. It does not receive or upload your Motus ledger.</p>
-        <p>The hosting provider may process standard web request data such as an IP address, requested URL, browser information, and request time to deliver and protect the site. See <a href="https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement">GitHub's privacy statement</a> for its practices.</p>
+        <p>The site has no analytics, advertising, cookies, forms, accounts, or client-side JavaScript. It never receives your Motus ledger.</p>
+        <p>GitHub Pages may process standard request data such as your IP address, browser, requested URL, and request time. See <a href="https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement">GitHub's privacy statement</a>.</p>
       </section>
 
       <section aria-labelledby="app-title">
         <h2 id="app-title">The command-line application</h2>
-        <p>Motus stores selected command metadata in <code>.motus/ledger.db</code> at the current Git root or working directory unless you choose another state path. It has no telemetry or ledger network client.</p>
+        <p>Motus stores selected command facts in <code>.motus/ledger.db</code> at the current Git root, or in the current directory outside Git. You can choose another path. Motus does not send the ledger anywhere.</p>
         <p>Wrapped-command argument values and stdin, raw stdout and stderr, environment variables, source files, prompts, and transcripts are not stored.</p>
-        <p>Finding text and closure notes are stored only when you submit them through a file or standard input. They remain in the local ledger until you delete the ledger file.</p>
+        <p>Motus stores finding text and closure notes only when you submit them. They remain until you delete the ledger file.</p>
       </section>
 
       <section aria-labelledby="control-title">
         <h2 id="control-title">Your control</h2>
-        <p>The ledger is an ordinary local SQLite file. You choose where it lives, whether it is backed up, who can access it, and when it is deleted. Add <code>.motus/</code> to the project's ignore file if it should remain outside version control.</p>
+        <p>The ledger is a local SQLite file. You choose its location, backups, access, and deletion. Add <code>.motus/</code> to <code>.gitignore</code> if it should stay out of version control.</p>
       </section>
     </div>
   </main>
