@@ -26,9 +26,11 @@ const forbiddenPhrases = [
 ];
 const requiredPhrases = {
   "index.html": [
-    'id="findings"',
+    'id="how-it-works"',
+    'id="install"',
+    "Keep the fix with the failure.",
     "finding list --query stale",
-    "Findings stay separate from run receipts.",
+    "The run keeps the facts. The finding keeps the reason.",
   ],
   "security.html": [
     "event and finding payload hashes",
