@@ -31,7 +31,7 @@ const requiredPhrases = {
     'id="how-it-works"',
     'id="install"',
     "Logs show what happened. Keep what you learned.",
-    "You add the likely cause and next step",
+    "Add an explanation or next step worth keeping.",
     "go install github.com/motus-os/work-ledger/cmd/motus@latest",
     "$ motus version",
     ".motus/ledger.db",
