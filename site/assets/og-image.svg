@@ -10,6 +10,6 @@
   <line x1="72" y1="190" x2="1128" y2="190" stroke="#dce1e8" stroke-width="2"/>
   <text x="72" y="302" fill="#101217" font-family="Arial, Helvetica, sans-serif" font-size="72" font-weight="700">Logs show what happened.</text>
   <text x="72" y="392" fill="#101217" font-family="Arial, Helvetica, sans-serif" font-size="72" font-weight="700">Keep what you learned.</text>
-  <text x="72" y="474" fill="#606978" font-family="Arial, Helvetica, sans-serif" font-size="29">Link the failed run, your explanation, and the successful run.</text>
+  <text x="72" y="474" fill="#606978" font-family="Arial, Helvetica, sans-serif" font-size="29">Connect command runs with what you learned.</text>
   <rect x="72" y="535" width="1056" height="3" fill="#2456e6"/>
 </svg>
