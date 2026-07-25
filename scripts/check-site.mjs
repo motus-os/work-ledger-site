@@ -14,34 +14,47 @@ const allowedExternalOrigins = new Set([
 const productionURL = new URL("https://www.motussupra.com/");
 const forbiddenPhrases = [
   "ai-powered",
+  "at scale",
+  "context layer",
+  "control plane",
+  "empower",
+  "future-proof",
   "game-changing",
   "honest answers",
   "in today's fast-paced",
+  "in a world where",
+  "intelligent platform",
   "keep the fix with the failure",
   "leverage",
   "next-generation",
+  "not just",
+  "powerful platform",
   "revolutionize",
+  "seamlessly",
   "seamless",
+  "source of truth",
   "supercharge",
   "unlock the power",
   "version-1 ledger",
 ];
 const requiredPhrases = {
   "index.html": [
-    'id="how-it-works"',
+    'id="example"',
     'id="install"',
-    "Logs show what happened. Keep what you learned.",
-    "Add an explanation or next step worth keeping.",
+    "Save the explanation with the run.",
+    "Motus is a local work ledger.",
+    "A developer adds a note",
+    "An agent searches later",
+    "Standing instructions belong in a README.",
     "go install github.com/motus-os/work-ledger/cmd/motus@latest",
     "$ motus version",
+    "--file finding.txt",
+    "finding list --query generated",
+    "finding show finding_...",
     ".motus/ledger.db",
     ".gitignore",
-    "calls the CLI from the workflow it already runs",
-    "Anyone using that same ledger can search the records later",
-    "Copy the project instructions",
-    "finding list --query stale",
-    "How Motus works.",
-    "When is a finding worth saving?",
+    "same commands and state directory",
+    "does not store raw command output",
   ],
   "security.html": [
     "event and finding payload hashes",
@@ -192,7 +205,7 @@ for (const required of [
 ]) {
   if (!fs.existsSync(path.join(siteRoot, required))) fail(`missing ${required}`);
 }
-if (!read("assets/og-image.svg").includes("Logs show what happened.")) {
+if (!read("assets/og-image.svg").includes("Save the explanation")) {
   fail("site/assets/og-image.svg: social preview message does not match the homepage");
 }
 
@@ -205,6 +218,18 @@ if (wordCount(heroHeading) > 9) {
 }
 if (wordCount(heroLede) > 30) {
   fail(`site/index.html: hero introduction exceeds 30 words (${wordCount(heroLede)})`);
+}
+
+const mainHTML = homepage.match(/<main(?:\s[^>]*)?>([\s\S]*?)<\/main>/)?.[1] || "";
+const homepageProse = mainHTML
+  .replace(/<pre(?:\s[^>]*)?>[\s\S]*?<\/pre>/g, " ")
+  .replace(/<code(?:\s[^>]*)?>[\s\S]*?<\/code>/g, " ")
+  .replace(/<[^>]+>/g, " ")
+  .replace(/&[a-z0-9#]+;/gi, " ")
+  .replace(/\s+/g, " ")
+  .trim();
+if (wordCount(homepageProse) > 300) {
+  fail(`site/index.html: visible non-code homepage copy exceeds 300 words (${wordCount(homepageProse)})`);
 }
 
 const trackedJunk = [".DS_Store", "Thumbs.db"];

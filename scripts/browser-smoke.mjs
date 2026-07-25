@@ -138,11 +138,12 @@ try {
         errors.push(`horizontal overflow: ${JSON.stringify(overflow)}`);
       }
       if (route === "/") {
-        const terminalOverflow = await page.locator(".terminal pre").evaluate(
-          (element) => element.scrollWidth - element.clientWidth,
+        const codeOverflow = await page.locator("pre").evaluateAll((elements) =>
+          elements.map((element) => element.scrollWidth - element.clientWidth),
         );
-        if (terminalOverflow > 1) {
-          errors.push(`hero visual requires horizontal scrolling: ${terminalOverflow}px`);
+        const overflowingCode = codeOverflow.filter((amount) => amount > 1);
+        if (overflowingCode.length > 0) {
+          errors.push(`code examples require horizontal scrolling: ${overflowingCode.join(", ")}px`);
         }
       }
 
@@ -176,9 +177,9 @@ try {
   await routeProductionSite(context);
   const page = await context.newPage();
   await page.goto(baseURL, { waitUntil: "networkidle" });
-  await page.locator('a[href="#how-it-works"]').first().click();
-  if ((await page.evaluate(() => location.hash)) !== "#how-it-works") {
-    throw new Error("How it works navigation did not resolve its anchor");
+  await page.locator('a[href="#example"]').first().click();
+  if ((await page.evaluate(() => location.hash)) !== "#example") {
+    throw new Error("Example navigation did not resolve its anchor");
   }
   await page.locator('a[href="#install"]').first().click();
   if ((await page.evaluate(() => location.hash)) !== "#install") {
@@ -228,7 +229,7 @@ try {
     if (fallbackPage.url() !== productionURL.href) {
       errors.push(`custom 404 home resolved to ${fallbackPage.url()}`);
     }
-    if ((await fallbackPage.locator("h1").innerText()) !== "Logs show what happened. Keep what you learned.") {
+    if ((await fallbackPage.locator("h1").innerText()) !== "Save the explanation with the run.") {
       errors.push("custom 404 home link did not load the site index");
     }
     await fallbackPage.close();
