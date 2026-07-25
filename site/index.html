@@ -3,15 +3,15 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Motus Work Ledger | Connect command runs with what you learned</title>
-  <meta name="description" content="Motus records selected facts about a command run and connects them to the explanation or next step you choose to save.">
+  <title>Motus Work Ledger | Save the explanation with the run</title>
+  <meta name="description" content="Motus is a local work ledger that links selected command-run facts to explanations and next steps written by people or agents.">
   <link rel="canonical" href="https://www.motussupra.com/">
   <meta property="og:type" content="website">
   <meta property="og:title" content="Motus Work Ledger">
-  <meta property="og:description" content="Logs show what happened. Motus keeps what you choose to save from the work.">
+  <meta property="og:description" content="Save the explanation with the run so another person or agent can find both later.">
   <meta property="og:url" content="https://www.motussupra.com/">
   <meta property="og:image" content="https://www.motussupra.com/assets/og-image.png">
-  <meta property="og:image:alt" content="Motus Work Ledger. Logs show what happened. Keep what you learned.">
+  <meta property="og:image:alt" content="Motus Work Ledger. Save the explanation with the run.">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="theme-color" content="#f7f8fa">
   <link rel="icon" href="./assets/favicon.svg" type="image/svg+xml">
@@ -31,7 +31,7 @@
         <span>Motus Work Ledger</span>
       </a>
       <nav class="site-nav" aria-label="Primary navigation">
-        <a href="#how-it-works">How it works</a>
+        <a href="#example">Example</a>
         <a href="#install">Install</a>
         <a href="https://github.com/motus-os/work-ledger">GitHub</a>
       </nav>
@@ -41,225 +41,93 @@
   <main id="main">
     <section class="hero shell" aria-labelledby="hero-title">
       <div class="hero-copy">
-        <h1 id="hero-title">Logs show what happened. Keep what you learned.</h1>
-        <p class="hero-lede">Motus records selected facts about a command run. Add an explanation or next step worth keeping. Search the note and inspect its run later.</p>
+        <h1 id="hero-title">Save the explanation with the run.</h1>
+        <p class="hero-lede">Motus is a local work ledger. It links selected facts about a command run to a note written by a person or agent, so a later caller can find both.</p>
         <div class="hero-actions">
           <a class="button" href="#install">Install Motus</a>
-          <a class="text-link" href="#how-it-works">See the workflow</a>
+          <a class="text-link" href="#example">View the example</a>
         </div>
       </div>
 
-      <div class="terminal" aria-label="A recorded run, saved explanation, and later retrieval">
-        <div class="terminal-bar" aria-hidden="true">
-          <span></span><span></span><span></span>
-          <strong>motus</strong>
-        </div>
-        <pre tabindex="0"><code><span class="quiet">01  RECORDED RUN</span>
-npm test
-run_c588...  <span class="success">success</span>
-
-<span class="quiet">02  WHAT YOU KEPT</span>
-Summary: generation must run first
-Next: keep this order in CI
-
-<span class="quiet">03  SEARCH LATER</span>
-finding list --query generation
-finding_1457...  open</code></pre>
-        <div class="terminal-foot">
-          <span>local</span>
-          <span>run-linked</span>
-          <span>searchable</span>
-        </div>
-      </div>
-    </section>
-
-    <section class="section shell" id="how-it-works" aria-labelledby="flow-title">
-      <div class="section-intro">
-        <h2 id="flow-title">How Motus works.</h2>
-        <p>Each run contains selected facts about one command execution. A finding is the explanation or next step you choose to keep with it. The example below follows a failure through a successful check.</p>
-        <p>A person, coding agent, script, or CI job calls the CLI from the workflow it already runs. By default, Motus writes recorded runs and findings to <code>.motus/ledger.db</code>. Anyone using that same ledger can search the records later.</p>
-      </div>
-
-      <ol class="flow" aria-label="Motus finding workflow">
+      <ol class="ledger-sequence" aria-label="How a Motus finding is recorded and used">
         <li>
-          <span class="flow-number">01</span>
-          <strong>Record</strong>
-          <p>Run a test, build, script, or tool through Motus.</p>
-          <code>motus wrap -- ...</code>
+          <span>Motus records the run</span>
+          <strong><code>npm test</code> · failure</strong>
         </li>
         <li>
-          <span class="flow-number">02</span>
-          <strong>Add a finding</strong>
-          <p>Save what you learned and the next step worth trying.</p>
-          <code>motus finding add</code>
+          <span>A developer adds a note</span>
+          <strong>The generated file was stale. Run generation before testing.</strong>
         </li>
         <li>
-          <span class="flow-number">03</span>
-          <strong>Close when settled</strong>
-          <p>Resolve it with a successful run that addresses it, or dismiss it with a note.</p>
-          <code>motus finding close</code>
+          <span>An agent searches later</span>
+          <strong><code>generated file</code></strong>
         </li>
         <li>
-          <span class="flow-number">04</span>
-          <strong>Find later</strong>
-          <p>Search the finding and inspect its run details.</p>
-          <code>motus finding list --query</code>
+          <span>The agent acts</span>
+          <strong>Generate first, then run the test.</strong>
         </li>
       </ol>
-      <p class="documentation-link">Using a coding agent? <a href="https://github.com/motus-os/work-ledger#use-motus-with-an-agent">Copy the project instructions</a> that tell it when to search, record, and resolve findings.</p>
     </section>
 
     <section class="section shell" id="example" aria-labelledby="example-title">
       <div class="section-intro">
-        <h2 id="example-title">Find what worked the last time.</h2>
-        <p>Abridged Motus output with shortened IDs.</p>
+        <h2 id="example-title">See a finding in use.</h2>
+        <p>A test fails because a generated file is stale, so the developer records what happened and what to run next. Later, a coding agent finds the note before running the test again.</p>
+        <p class="output-note">Example output is abridged. IDs are shortened.</p>
       </div>
 
-      <div class="receipt-layout">
-        <div class="example-code">
-          <pre class="receipt-code" tabindex="0"><code>$ motus finding list --query generated
-finding_1457...  resolved
-The generated file was stale.
+      <div class="story-grid">
+        <article class="story-part" aria-labelledby="earlier-title">
+          <h3 id="earlier-title">Earlier</h3>
+          <pre tabindex="0"><code>$ motus wrap -- npm test
+motus: recorded run_0370... (failure)
+
+$ motus finding add --run run_0370... --file finding.txt
+Recorded finding_1457... (open)</code></pre>
+          <div class="authored-note">
+            <span>Written by the developer</span>
+            <p>The generated file was stale. Run generation before testing.</p>
+          </div>
+        </article>
+
+        <article class="story-part" aria-labelledby="later-title">
+          <h3 id="later-title">Later</h3>
+          <pre tabindex="0"><code>$ motus finding list --query generated
+finding_1457...  open  The generated file was stale.
 
 $ motus finding show finding_1457...
-Hypothesis:    Generation did not run before the test.
-Next step:     Regenerate the file, then rerun the test.
-Origin run:    run_0370...  failure
-Resolving run: run_c588...  success
-Closure note: Refreshed the generated file
-              before running the check.</code></pre>
-        </div>
-        <div class="receipt-copy">
-          <h3>Run facts</h3>
-          <p>Command name, Git state, timing, exit status, outcome, and output counts.</p>
-          <h3>What you save</h3>
-          <p>A summary, likely cause, and next step that you choose to keep.</p>
-          <h3>Resolution</h3>
-          <p>A note and a link to the successful run after the fix.</p>
-        </div>
+Origin run: run_0370...  failure
+Summary: The generated file was stale.</code></pre>
+          <div class="authored-note">
+            <span>What the agent does next</span>
+            <p>Run generation, then record the test through Motus. The caller can link the successful run when closing the finding.</p>
+          </div>
+        </article>
       </div>
+
+      <p class="example-context">Standing instructions belong in a README. Motus stores run-specific explanations, constraints, workarounds, and next steps as searchable findings.</p>
     </section>
 
     <section class="section shell" id="install" aria-labelledby="install-title">
-      <div class="section-intro">
-        <h2 id="install-title">Try a failure-to-fix example.</h2>
-        <p>This example uses <code>npm test</code> to show the full finding lifecycle. Replace it with any command you already run. Paths and IDs are shortened.</p>
-      </div>
+      <div class="start-layout">
+        <div class="section-intro">
+          <h2 id="install-title">Use it with commands you already run.</h2>
+          <p>Wrap a test, build, script, or check. Add a finding only when the work produced something worth keeping.</p>
+          <p class="state-note">Motus stores this project's ledger at <code>.motus/ledger.db</code>. Add <code>.motus/</code> to <code>.gitignore</code>. People, agents, scripts, and CI use the same commands and state directory when they need the same records.</p>
+          <p class="documentation-link"><a href="https://github.com/motus-os/work-ledger#example-record-a-failure-and-what-worked-next">Read the complete workflow</a></p>
+        </div>
 
-      <div class="quickstart">
-        <div class="quickstep">
-          <div class="quickstep-copy">
-            <div class="quickstep-title"><span>1</span><h3>Install Motus</h3></div>
-            <p>Use Go 1.26.5 or newer, or download a verified archive from <a href="https://github.com/motus-os/work-ledger/releases/latest">GitHub Releases</a>. Go installs the binary in <code>GOBIN</code>, or <code>GOPATH/bin</code> when unset. Put that directory on <code>PATH</code>.</p>
-            <p>Motus writes this project's ledger to <code>.motus/ledger.db</code>. Add <code>.motus/</code> to <code>.gitignore</code> before recording work.</p>
-          </div>
+        <div class="start-commands" aria-label="Install and first-use commands">
           <pre tabindex="0"><code>$ go install github.com/motus-os/work-ledger/cmd/motus@latest
-$ motus version</code></pre>
-        </div>
-        <div class="quickstep">
-          <div class="quickstep-copy">
-            <div class="quickstep-title"><span>2</span><h3>Record the failing command</h3></div>
-            <p>Motus prints a run ID. After a failure, it also prints the exact command for adding a finding.</p>
-          </div>
-          <pre tabindex="0"><code>$ motus wrap -- npm test
-motus: recorded run_0370... (failure)
-Keep why this failed:
-  motus finding add --run run_0370... --file -</code></pre>
-        </div>
-        <div class="quickstep">
-          <div class="quickstep-copy">
-            <div class="quickstep-title"><span>3</span><h3>Save what you learned</h3></div>
-            <p>Copy the printed command and add <code>--format json</code>. Paste a summary, likely cause, and next step, then finish input with Ctrl-D, or Ctrl-Z and Enter on Windows.</p>
-          </div>
-          <pre tabindex="0"><code>$ motus finding add --run run_0370... --format json --file -
-{
-  "summary": "The generated file was stale.",
-  "hypothesis": "Generation was skipped.",
-  "next_step": "Regenerate, then test."
-}
-Recorded finding_1457... (open)</code></pre>
-        </div>
-        <div class="quickstep">
-          <div class="quickstep-copy">
-            <div class="quickstep-title"><span>4</span><h3>Record the successful check</h3></div>
-            <p>Fix the problem and run the same command again. Keep the new run ID if it succeeds.</p>
-          </div>
-          <pre tabindex="0"><code>$ motus wrap -- npm test
-motus: recorded run_c588... (success)</code></pre>
-        </div>
-        <div class="quickstep">
-          <div class="quickstep-copy">
-            <div class="quickstep-title"><span>5</span><h3>Link and search</h3></div>
-            <p>Use the finding ID and successful run ID. Enter a closure note, finish input the same way, then search your saved words.</p>
-          </div>
-          <pre tabindex="0"><code>$ motus finding close finding_1457... --disposition resolved --run run_c588... --file -
-Refreshed the generated file before running the check.
-Closed finding_1457... (resolved)
-
-$ motus finding list --query stale</code></pre>
+$ motus version
+$ motus wrap -- npm test</code></pre>
+          <pre tabindex="0"><code>$ motus finding add --run run_... --file finding.txt
+$ motus finding list --query generated
+$ motus finding show finding_...</code></pre>
         </div>
       </div>
-      <p class="documentation-link"><a href="https://github.com/motus-os/work-ledger#install">Read the full install and workflow guide</a></p>
-    </section>
 
-    <section class="section shell" id="recorded" aria-labelledby="recorded-title">
-      <div class="section-intro">
-        <h2 id="recorded-title">What Motus keeps.</h2>
-        <p>Run facts are captured when you use <code>motus wrap</code>. Finding text is stored only when you add it.</p>
-      </div>
-
-      <div class="boundary-columns">
-        <div>
-          <h3>Recorded with a run</h3>
-          <ul>
-            <li>stable run and event IDs</li>
-            <li>start and end timestamps</li>
-            <li>executable name and argument count</li>
-            <li>Git repository, commit, and dirty state</li>
-            <li>exit code, signal, timeout, and outcome</li>
-            <li>output byte and line counts</li>
-          </ul>
-        </div>
-        <div>
-          <h3>Written by you</h3>
-          <ul>
-            <li>finding summary and likely cause</li>
-            <li>next step, when useful</li>
-            <li>resolution or dismissal note</li>
-            <li>link to the origin run and, when resolved, the successful run</li>
-          </ul>
-        </div>
-      </div>
-    </section>
-
-    <section class="section shell questions" aria-labelledby="questions-title">
-      <div class="section-intro">
-        <h2 id="questions-title">Common questions.</h2>
-      </div>
-      <dl>
-        <div>
-          <dt>Why not Git, shell history, or CI logs?</dt>
-          <dd>Git shows what changed. Shell history and CI show what ran. Motus keeps the explanation or next step you chose to save connected to the run, then lets you find the note and its run later.</dd>
-        </div>
-        <div>
-          <dt>When is a finding worth saving?</dt>
-          <dd>When the explanation or next step will matter later. A difficult failure is one example. Routine runs do not need a finding.</dd>
-        </div>
-        <div>
-          <dt>Does Motus store raw command output?</dt>
-          <dd>No. Output continues to your terminal or CI log. Motus records counts and stores only the finding text you choose to add.</dd>
-        </div>
-      </dl>
-    </section>
-
-    <section class="closing">
-      <div class="shell closing-inner">
-        <div>
-          <h2>Keep the answer for next time.</h2>
-          <p>Record the run, add the explanation, and find them together later.</p>
-        </div>
-        <a class="button button-light" href="#install">Install Motus</a>
-      </div>
+      <p class="trust-line">Records stay in a local SQLite ledger and require no account or service. Motus does not store raw command output.</p>
     </section>
   </main>
 
