@@ -27,9 +27,13 @@ html {
 }
 
 body {
+  min-height: 100vh;
+  min-height: 100svh;
   margin: 0;
   background: var(--paper);
   color: var(--ink);
+  display: flex;
+  flex-direction: column;
   font-family: var(--sans);
   font-size: 1rem;
   line-height: 1.6;
@@ -55,9 +59,13 @@ a:hover {
 
 a:focus-visible,
 pre:focus-visible {
-  outline: 3px solid rgba(36, 86, 230, 0.35);
+  outline: 3px solid var(--blue);
   outline-offset: 4px;
   border-radius: 3px;
+}
+
+main {
+  flex: 1 0 auto;
 }
 
 code,
@@ -511,7 +519,7 @@ dd {
   color: var(--muted);
 }
 
-@media (max-width: 900px) {
+@media (max-width: 1000px) {
   .hero {
     min-height: 0;
     grid-template-columns: 1fr;
@@ -559,7 +567,7 @@ dd {
     font-size: 0.77rem;
   }
 
-  .site-nav a:nth-child(2) {
+  .site-nav a:first-child {
     display: none;
   }
 

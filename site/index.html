@@ -3,15 +3,15 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Motus Work Ledger | Save the explanation with the run</title>
-  <meta name="description" content="Motus is a local work ledger that links selected command-run facts to explanations and next steps written by people or agents.">
+  <title>Motus Work Ledger | Searchable findings tied to command runs</title>
+  <meta name="description" content="Motus records selected facts from command runs and connects them to findings that developers and coding agents can search and inspect later.">
   <link rel="canonical" href="https://www.motussupra.com/">
   <meta property="og:type" content="website">
   <meta property="og:title" content="Motus Work Ledger">
-  <meta property="og:description" content="Save the explanation with the run so another person or agent can find both later.">
+  <meta property="og:description" content="Search earlier findings and inspect the command run behind each one.">
   <meta property="og:url" content="https://www.motussupra.com/">
   <meta property="og:image" content="https://www.motussupra.com/assets/og-image.png">
-  <meta property="og:image:alt" content="Motus Work Ledger. Save the explanation with the run.">
+  <meta property="og:image:alt" content="Motus Work Ledger. Searchable findings tied to command runs.">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="theme-color" content="#f7f8fa">
   <link rel="icon" href="./assets/favicon.svg" type="image/svg+xml">
@@ -41,8 +41,8 @@
   <main id="main">
     <section class="hero shell" aria-labelledby="hero-title">
       <div class="hero-copy">
-        <h1 id="hero-title">Save the explanation with the run.</h1>
-        <p class="hero-lede">Motus is a local work ledger. It links selected facts about a command run to a note written by a person or agent, so a later caller can find both.</p>
+        <h1 id="hero-title">Use earlier findings when similar work comes back.</h1>
+        <p class="hero-lede">Motus records selected facts from command runs in a local ledger. Add an explanation, constraint, workaround, or next step, then search the finding and inspect its run later.</p>
         <div class="hero-actions">
           <a class="button" href="#install">Install Motus</a>
           <a class="text-link" href="#example">View the example</a>
@@ -51,20 +51,20 @@
 
       <ol class="ledger-sequence" aria-label="How a Motus finding is recorded and used">
         <li>
-          <span>Motus records the run</span>
+          <span>Motus records a run</span>
           <strong><code>npm test</code> · failure</strong>
         </li>
         <li>
-          <span>A developer adds a note</span>
-          <strong>The generated file was stale. Run generation before testing.</strong>
+          <span>The developer adds a finding</span>
+          <strong>The generated file was stale. Generate before testing.</strong>
         </li>
         <li>
-          <span>An agent searches later</span>
+          <span>A coding agent searches later</span>
           <strong><code>generated file</code></strong>
         </li>
         <li>
-          <span>The agent acts</span>
-          <strong>Generate first, then run the test.</strong>
+          <span>Motus returns the finding and run</span>
+          <strong>Generate before testing · <code>run_0370...</code></strong>
         </li>
       </ol>
     </section>
@@ -72,7 +72,7 @@
     <section class="section shell" id="example" aria-labelledby="example-title">
       <div class="section-intro">
         <h2 id="example-title">See a finding in use.</h2>
-        <p>A test fails because a generated file is stale, so the developer records what happened and what to run next. Later, a coding agent finds the note before running the test again.</p>
+        <p>A test fails because a generated file is stale. The developer records the explanation and next step with the failed run. Later, a coding agent searches before testing and gets the finding with its source run.</p>
         <p class="output-note">Example output is abridged. IDs are shortened.</p>
       </div>
 
@@ -85,8 +85,8 @@ motus: recorded run_0370... (failure)
 $ motus finding add --run run_0370... --file finding.txt
 Recorded finding_1457... (open)</code></pre>
           <div class="authored-note">
-            <span>Written by the developer</span>
-            <p>The generated file was stale. Run generation before testing.</p>
+            <span>Finding</span>
+            <p>The generated file was stale. Generate before testing.</p>
           </div>
         </article>
 
@@ -99,22 +99,22 @@ $ motus finding show finding_1457...
 Origin run: run_0370...  failure
 Summary: The generated file was stale.</code></pre>
           <div class="authored-note">
-            <span>What the agent does next</span>
-            <p>Run generation, then record the test through Motus. The caller can link the successful run when closing the finding.</p>
+            <span>Next step</span>
+            <p>Generate the file, then run the test through Motus. If it passes, close the finding with that successful run. The original finding stays unchanged.</p>
           </div>
         </article>
       </div>
 
-      <p class="example-context">Standing instructions belong in a README. Motus stores run-specific explanations, constraints, workarounds, and next steps as searchable findings.</p>
+      <p class="example-context">Use the same workflow for a constraint, workaround, or decision tied to a specific run.</p>
     </section>
 
     <section class="section shell" id="install" aria-labelledby="install-title">
       <div class="start-layout">
         <div class="section-intro">
-          <h2 id="install-title">Use it with commands you already run.</h2>
-          <p>Wrap a test, build, script, or check. Add a finding only when the work produced something worth keeping.</p>
-          <p class="state-note">Motus stores this project's ledger at <code>.motus/ledger.db</code>. Add <code>.motus/</code> to <code>.gitignore</code>. People, agents, scripts, and CI use the same commands and state directory when they need the same records.</p>
-          <p class="documentation-link"><a href="https://github.com/motus-os/work-ledger#example-record-a-failure-and-what-worked-next">Read the complete workflow</a></p>
+          <h2 id="install-title">Install Motus and record a run.</h2>
+          <p><a href="https://github.com/motus-os/work-ledger/releases/latest">Download a release</a> for macOS, Linux, or Windows, or install with Go. Put Motus in front of a test, build, script, or check you already run.</p>
+          <p class="state-note">Motus creates <code>.motus/ledger.db</code> at the project's Git root by default. Add <code>.motus/</code> to <code>.gitignore</code>. Use the same state directory wherever people, coding agents, scripts, or CI need the same records.</p>
+          <p class="documentation-link"><a href="https://github.com/motus-os/work-ledger#record-a-run-and-add-a-finding">Read the complete workflow</a></p>
         </div>
 
         <div class="start-commands" aria-label="Install and first-use commands">
@@ -127,7 +127,7 @@ $ motus finding show finding_...</code></pre>
         </div>
       </div>
 
-      <p class="trust-line">Records stay in a local SQLite ledger and require no account or service. Motus does not store raw command output.</p>
+      <p class="trust-line">Motus runs on demand, uses SQLite, and requires no account or hosted service. It does not upload the ledger or store raw command output.</p>
     </section>
   </main>
 

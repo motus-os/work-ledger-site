@@ -3,23 +3,46 @@ import http from "node:http";
 import path from "node:path";
 import process from "node:process";
 import { fileURLToPath } from "node:url";
-import { chromium } from "playwright";
+import { chromium, firefox, webkit } from "playwright";
 import axe from "axe-core";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const siteRoot = path.join(root, "site");
-const origin = "http://127.0.0.1:4173";
-const baseURL = `${origin}/site`;
 const productionURL = new URL("https://www.motussupra.com/");
 const pages = ["/", "/security.html", "/privacy.html", "/404.html"];
-const profiles = [
-  { name: "desktop-light", viewport: { width: 1440, height: 1000 }, colorScheme: "light", reducedMotion: "no-preference" },
-  { name: "desktop-dark-preference", viewport: { width: 1440, height: 1000 }, colorScheme: "dark", reducedMotion: "reduce" },
-  { name: "tablet-light", viewport: { width: 768, height: 1024 }, colorScheme: "light", reducedMotion: "no-preference" },
-  { name: "mobile-light", viewport: { width: 390, height: 844 }, colorScheme: "light", reducedMotion: "no-preference" },
-  { name: "mobile-dark-preference", viewport: { width: 390, height: 844 }, colorScheme: "dark", reducedMotion: "reduce" },
-  { name: "narrow-light", viewport: { width: 320, height: 700 }, colorScheme: "light", reducedMotion: "no-preference" },
+const chromiumProfiles = [
+  { name: "280-light", viewport: { width: 280, height: 700 } },
+  { name: "320-light", viewport: { width: 320, height: 700 } },
+  { name: "360-light", viewport: { width: 360, height: 800 } },
+  { name: "390-light", viewport: { width: 390, height: 844 } },
+  { name: "412-dark-reduced", viewport: { width: 412, height: 915 }, colorScheme: "dark", reducedMotion: "reduce" },
+  { name: "680-light", viewport: { width: 680, height: 800 } },
+  { name: "768-light", viewport: { width: 768, height: 1024 } },
+  { name: "940-light", viewport: { width: 940, height: 700 } },
+  { name: "999-light", viewport: { width: 999, height: 800 } },
+  { name: "1000-light", viewport: { width: 1000, height: 800 } },
+  { name: "1001-light", viewport: { width: 1001, height: 800 } },
+  { name: "1024-light", viewport: { width: 1024, height: 768 } },
+  { name: "1280-light", viewport: { width: 1280, height: 900 } },
+  { name: "1440-light", viewport: { width: 1440, height: 1000 } },
+  { name: "1920-dark-reduced", viewport: { width: 1920, height: 1080 }, colorScheme: "dark", reducedMotion: "reduce" },
+  { name: "2560-light", viewport: { width: 2560, height: 1440 } },
 ];
+const secondaryProfiles = [
+  { name: "390-light", viewport: { width: 390, height: 844 } },
+  { name: "1000-light", viewport: { width: 1000, height: 800 } },
+  { name: "1440-dark-reduced", viewport: { width: 1440, height: 1000 }, colorScheme: "dark", reducedMotion: "reduce" },
+];
+const browserSpecs = process.env.BROWSER_SET === "all"
+  ? [
+      { name: "chromium", type: chromium, profiles: chromiumProfiles },
+      { name: "firefox", type: firefox, profiles: secondaryProfiles },
+      { name: "webkit", type: webkit, profiles: secondaryProfiles },
+    ]
+  : [{ name: "chromium", type: chromium, profiles: chromiumProfiles }];
+
+let origin = "";
+let baseURL = "";
 
 function contentType(file) {
   const extension = path.extname(file);
@@ -42,7 +65,7 @@ function sendFile(response, file, status) {
 }
 
 const server = http.createServer((request, response) => {
-  const requested = new URL(request.url ?? "/", origin);
+  const requested = new URL(request.url ?? "/", origin || "http://127.0.0.1");
   const prefix = "/site/";
   if (requested.pathname === "/site") {
     response.writeHead(308, { location: `${prefix}${requested.search}` });
@@ -63,8 +86,12 @@ const server = http.createServer((request, response) => {
 async function startServer() {
   await new Promise((resolve, reject) => {
     server.once("error", reject);
-    server.listen(4173, "127.0.0.1", resolve);
+    server.listen(0, "127.0.0.1", resolve);
   });
+  const address = server.address();
+  if (!address || typeof address === "string") throw new Error("site test server did not expose a TCP port");
+  origin = `http://127.0.0.1:${address.port}`;
+  baseURL = `${origin}/site`;
 }
 
 function isProductionURL(url) {
@@ -95,84 +122,125 @@ function routeName(route) {
   return route === "/" ? "index" : route.replace(/^\//, "").replace(/\.html$/, "");
 }
 
-let browser;
-try {
-  await startServer();
-  browser = await chromium.launch({ headless: true });
+function captureName(browserName, route, profileName) {
+  return `${routeName(route)}-${browserName}-${profileName}.png`;
+}
 
-  for (const profile of profiles) {
-    const context = await browser.newContext({
-      viewport: profile.viewport,
-      colorScheme: profile.colorScheme,
-      reducedMotion: profile.reducedMotion,
-    });
-    await routeProductionSite(context);
-
-    for (const route of pages) {
-      const page = await context.newPage();
-      const errors = [];
-      page.on("console", (message) => {
-        if (message.type() === "error") errors.push(`console: ${message.text()}`);
-      });
-      page.on("pageerror", (error) => errors.push(`page: ${error.message}`));
-      page.on("request", (request) => {
-        const requested = new URL(request.url());
-        if (requested.origin !== origin && !isProductionURL(requested)) {
-          errors.push(`network: ${request.url()}`);
-        }
-      });
-      page.on("response", (response) => {
-        if (response.status() >= 400) errors.push(`HTTP ${response.status()}: ${response.url()}`);
-      });
-
-      const response = await page.goto(`${baseURL}${route}`, { waitUntil: "networkidle" });
-      if (!response?.ok()) errors.push(`navigation returned ${response?.status()}`);
-      if (await page.locator("h1").count() !== 1) errors.push("page does not have exactly one h1");
-      if ((await page.title()).trim() === "") errors.push("page title is empty");
-
-      const overflow = await page.evaluate(() => ({
-        document: document.documentElement.scrollWidth - document.documentElement.clientWidth,
-        body: document.body.scrollWidth - document.body.clientWidth,
-      }));
-      if (overflow.document > 1 || overflow.body > 1) {
-        errors.push(`horizontal overflow: ${JSON.stringify(overflow)}`);
-      }
-      if (route === "/") {
-        const codeOverflow = await page.locator("pre").evaluateAll((elements) =>
-          elements.map((element) => element.scrollWidth - element.clientWidth),
-        );
-        const overflowingCode = codeOverflow.filter((amount) => amount > 1);
-        if (overflowingCode.length > 0) {
-          errors.push(`code examples require horizontal scrolling: ${overflowingCode.join(", ")}px`);
-        }
-      }
-
-      await page.addScriptTag({ content: axe.source });
-      const axeResults = await page.evaluate(async () => globalThis.axe.run(document, {
-        resultTypes: ["violations"],
-      }));
-      for (const violation of axeResults.violations) {
-        errors.push(`axe ${violation.id}: ${violation.help} (${violation.nodes.length})`);
-      }
-
-      if (process.env.CAPTURE_SITE === "1") {
-        const output = path.join(root, "artifacts", `${routeName(route)}-${profile.name}.png`);
-        fs.mkdirSync(path.dirname(output), { recursive: true });
-        await page.screenshot({ path: output, fullPage: true });
-      }
-
-      await page.keyboard.press("Tab");
-      const activeClass = await page.evaluate(() => document.activeElement?.className ?? "");
-      if (activeClass !== "skip-link") errors.push("first keyboard focus is not the skip link");
-
-      await page.close();
-      if (errors.length > 0) {
-        throw new Error(`${route} ${profile.name}\n${errors.join("\n")}`);
-      }
+async function inspectPage(browserName, browser, profile, route) {
+  const context = await browser.newContext({
+    viewport: profile.viewport,
+    colorScheme: profile.colorScheme ?? "light",
+    reducedMotion: profile.reducedMotion ?? "no-preference",
+  });
+  await routeProductionSite(context);
+  const page = await context.newPage();
+  const errors = [];
+  page.on("console", (message) => {
+    if (message.type() === "error") errors.push(`console: ${message.text()}`);
+  });
+  page.on("pageerror", (error) => errors.push(`page: ${error.message}`));
+  page.on("request", (request) => {
+    const requested = new URL(request.url());
+    if (requested.origin !== origin && !isProductionURL(requested)) {
+      errors.push(`network: ${request.url()}`);
     }
-    await context.close();
+  });
+  page.on("response", (response) => {
+    if (response.status() >= 400) errors.push(`HTTP ${response.status()}: ${response.url()}`);
+  });
+
+  const response = await page.goto(`${baseURL}${route}`, { waitUntil: "networkidle" });
+  if (!response?.ok()) errors.push(`navigation returned ${response?.status()}`);
+  if (await page.locator("h1").count() !== 1) errors.push("page does not have exactly one h1");
+  if ((await page.title()).trim() === "") errors.push("page title is empty");
+
+  const overflow = await page.evaluate(() => ({
+    document: document.documentElement.scrollWidth - document.documentElement.clientWidth,
+    body: document.body.scrollWidth - document.body.clientWidth,
+  }));
+  if (overflow.document > 1 || overflow.body > 1) {
+    errors.push(`horizontal overflow: ${JSON.stringify(overflow)}`);
   }
 
+  if (route === "/") {
+    const codeOverflow = await page.locator("pre").evaluateAll((elements) =>
+      elements.map((element) => element.scrollWidth - element.clientWidth),
+    );
+    const overflowingCode = codeOverflow.filter((amount) => amount > 1);
+    if (overflowingCode.length > 0) {
+      errors.push(`code examples require horizontal scrolling: ${overflowingCode.join(", ")}px`);
+    }
+
+    await page.locator("a.button").focus();
+    const focusStyle = await page.locator("a.button").evaluate((element) => {
+      const style = getComputedStyle(element);
+      return { color: style.outlineColor, style: style.outlineStyle, width: style.outlineWidth };
+    });
+    if (focusStyle.color !== "rgb(36, 86, 230)" || focusStyle.style !== "solid" || parseFloat(focusStyle.width) < 3) {
+      errors.push(`button focus indicator is not the reviewed high-contrast outline: ${JSON.stringify(focusStyle)}`);
+    }
+
+    if (profile.viewport.width <= 680) {
+      const installVisible = await page.locator('.site-nav a[href="#install"]').isVisible();
+      const githubVisible = await page.locator('.site-nav a[href^="https://github.com/"]').isVisible();
+      if (!installVisible || !githubVisible) errors.push("mobile navigation must show Install and GitHub");
+    }
+  }
+
+  if (route === "/404.html" && profile.viewport.width <= 680) {
+    const footerGap = await page.evaluate(() => {
+      const footer = document.querySelector("footer");
+      if (!footer) return Number.POSITIVE_INFINITY;
+      return Math.abs(document.body.scrollHeight - (footer.getBoundingClientRect().bottom + window.scrollY));
+    });
+    if (footerGap > 1) errors.push(`mobile 404 footer leaves ${footerGap}px after the page content`);
+  }
+
+  await page.addScriptTag({ content: axe.source });
+  const axeResults = await page.evaluate(async () => globalThis.axe.run(document, {
+    resultTypes: ["violations"],
+  }));
+  for (const violation of axeResults.violations) {
+    errors.push(`axe ${violation.id}: ${violation.help} (${violation.nodes.length})`);
+  }
+
+  if (process.env.CAPTURE_SITE === "1") {
+    const output = path.join(root, "artifacts", captureName(browserName, route, profile.name));
+    fs.mkdirSync(path.dirname(output), { recursive: true });
+    await page.screenshot({ path: output, fullPage: true });
+  }
+
+  await page.goto(`${baseURL}${route}`, { waitUntil: "networkidle" });
+  if (browserName === "chromium") {
+    await page.keyboard.press("Tab");
+  } else {
+    await page.locator(".skip-link").focus();
+  }
+  const activeClass = await page.evaluate(() => document.activeElement?.className ?? "");
+  if (activeClass !== "skip-link") errors.push("first keyboard focus is not the skip link");
+
+  await context.close();
+  if (errors.length > 0) {
+    throw new Error(`${browserName} ${route} ${profile.name}\n${errors.join("\n")}`);
+  }
+}
+
+async function inspectTextSpacing(browser) {
+  for (const viewport of [{ width: 390, height: 844 }, { width: 1440, height: 1000 }]) {
+    const context = await browser.newContext({ viewport });
+    await routeProductionSite(context);
+    const page = await context.newPage();
+    await page.goto(baseURL, { waitUntil: "networkidle" });
+    await page.addStyleTag({
+      content: "*{line-height:1.5!important;letter-spacing:.12em!important;word-spacing:.16em!important}p{margin-bottom:2em!important}",
+    });
+    const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
+    await context.close();
+    if (overflow > 1) throw new Error(`text-spacing check overflowed by ${overflow}px at ${viewport.width}px`);
+  }
+}
+
+async function inspectNavigationAndFallbacks(browser) {
   const context = await browser.newContext({ viewport: { width: 1280, height: 900 } });
   await routeProductionSite(context);
   const page = await context.newPage();
@@ -229,16 +297,35 @@ try {
     if (fallbackPage.url() !== productionURL.href) {
       errors.push(`custom 404 home resolved to ${fallbackPage.url()}`);
     }
-    if ((await fallbackPage.locator("h1").innerText()) !== "Save the explanation with the run.") {
+    if ((await fallbackPage.locator("h1").innerText()) !== "Use earlier findings when similar work comes back.") {
       errors.push("custom 404 home link did not load the site index");
     }
     await fallbackPage.close();
     if (errors.length > 0) throw new Error(`${route} custom 404\n${errors.join("\n")}`);
   }
   await fallbackContext.close();
+}
 
-  console.log(`PASS browser and accessibility checks (${pages.length * profiles.length} renders, 2 custom 404 fallbacks)`);
+const browsers = [];
+let renderCount = 0;
+try {
+  await startServer();
+  for (const spec of browserSpecs) {
+    const browser = await spec.type.launch({ headless: true });
+    browsers.push(browser);
+    for (const profile of spec.profiles) {
+      for (const route of pages) {
+        await inspectPage(spec.name, browser, profile, route);
+        renderCount += 1;
+      }
+    }
+    if (spec.name === "chromium") {
+      await inspectTextSpacing(browser);
+      await inspectNavigationAndFallbacks(browser);
+    }
+  }
+  console.log(`PASS browser and accessibility checks (${renderCount} renders across ${browserSpecs.length} browser engine(s), 2 text-spacing views, 2 custom 404 fallbacks)`);
 } finally {
-  if (browser) await browser.close();
+  await Promise.all(browsers.map((browser) => browser.close()));
   if (server.listening) await new Promise((resolve) => server.close(resolve));
 }

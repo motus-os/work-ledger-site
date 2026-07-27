@@ -8,6 +8,7 @@
   "scripts": {
     "check:static": "node scripts/check-site.mjs",
     "check:browser": "node scripts/browser-smoke.mjs",
+    "check:browser:full": "BROWSER_SET=all node scripts/browser-smoke.mjs",
     "serve": "python3 -m http.server 4173 --bind 127.0.0.1 --directory site",
     "test": "npm run check:static && npm run check:browser"
   },

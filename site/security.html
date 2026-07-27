@@ -33,33 +33,32 @@
   <main id="main" class="page shell">
     <header class="page-header">
       <h1>Security</h1>
-      <p>Motus blocks ordinary changes to a local ledger and checks it for inconsistencies. Anyone who controls the database file can still rewrite it.</p>
+      <p>Motus enforces append rules and checks the current consistency of its local SQLite ledger.</p>
     </header>
 
     <div class="page-body">
       <section aria-labelledby="model-title">
-        <h2 id="model-title">What Motus checks</h2>
+        <h2 id="model-title">Ledger protections</h2>
         <ul>
-          <li>state paths and private POSIX permissions</li>
-          <li>schema version and required SQLite objects</li>
-          <li>database integrity and foreign keys</li>
-          <li>event and finding payload hashes</li>
-          <li>event sequence order and finding run links</li>
-          <li>terminal events against their run projections</li>
+          <li>private state paths and POSIX permissions</li>
+          <li>the expected schema and foreign keys</li>
+          <li>ordered run events and closed-run projections</li>
+          <li>payload hashes and links between findings and runs</li>
+          <li>a closed successful run for every resolved finding</li>
         </ul>
-        <p>SQLite rules block normal updates, deletes, missing event numbers, events after a run closes, run deletion, and changes to closed runs. Closing a finding adds a separate record; the original does not change.</p>
+        <p>SQLite rules reject normal updates and deletes, event gaps, events after a run closes, run deletion, and changes to closed runs. Closing a finding adds a separate record; the original does not change.</p>
       </section>
 
       <section aria-labelledby="boundary-title">
-        <h2 id="boundary-title">Trust boundary</h2>
-        <p>Anyone who controls the database can remove these protections and rewrite the records and hashes. <code>motus doctor</code> checks the current file but cannot prove this never happened.</p>
-        <p>Receipts are unsigned local records. Motus does not observe the command independently or prove that the work was correct.</p>
+        <h2 id="boundary-title">Database control</h2>
+        <p>Anyone who controls the database file can remove these protections, rewrite records and hashes, and restore a self-consistent schema. <code>motus doctor</code> checks the current file but cannot establish that this never happened.</p>
+        <p>A receipt is a deterministic JSON projection of one run. It is not signed, independently observed, or an assessment of whether the work was correct.</p>
       </section>
 
       <section aria-labelledby="data-title">
         <h2 id="data-title">Sensitive data</h2>
-        <p>Motus creates run records without command argument values, stdin, raw output, environment variables, source files, prompts, or transcripts.</p>
-        <p>Motus stores the finding summary, likely cause, next step, or closure note that you submit. Review that text before recording it.</p>
+        <p>Run records omit command argument values, stdin, raw output, environment variables, source files, prompts, and transcripts.</p>
+        <p>Motus stores the finding summary, likely cause, next step, and closure note that you submit. Review that text before recording it.</p>
       </section>
 
       <section aria-labelledby="report-title">
