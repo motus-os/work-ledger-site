@@ -42,23 +42,35 @@ const forbiddenPhrases = [
 ];
 const requiredPhrases = {
   "index.html": [
+    'id="workflow"',
     'id="example"',
     'id="install"',
-    "Use earlier findings when similar work comes back.",
-    "Motus records selected facts from command runs",
-    "The developer adds a finding",
-    "A coding agent searches later",
-    "Motus returns the finding and run",
-    "constraint, workaround, or decision",
-    "Download a release",
+    "Record the context your next agent will need.",
+    "Motus links authored explanations, constraints, workarounds, and decisions",
+    "Later agents can search the same ledger",
+    "How Motus works",
+    "Record a run",
+    "Add a finding",
+    "Tell agents when to search",
+    "Search before similar work",
+    "A lesson from building Motus",
+    "One agent reviewed Motus",
+    "<h3 id=\"earlier-title\">Recorded</h3>",
+    "<h3 id=\"later-title\">Retrieved</h3>",
+    "Motus stores run metadata, not raw output.",
+    "the next agent starts with the known failure mode",
+    "constraints, workarounds, and decisions",
+    "Download Motus",
+    "Install and record",
+    "Add and retrieve",
     "go install github.com/motus-os/work-ledger/cmd/motus@latest",
     "$ motus version",
     "--file finding.txt",
-    "finding list --query generated",
+    'finding list --query "repository history"',
     "finding show finding_...",
     ".motus/ledger.db",
     ".gitignore",
-    "same state directory",
+    "Use one state directory",
     "does not upload the ledger or store raw command output",
   ],
   "security.html": [
@@ -213,7 +225,7 @@ for (const required of [
 ]) {
   if (!fs.existsSync(path.join(siteRoot, required))) fail(`missing ${required}`);
 }
-if (!read("assets/og-image.svg").includes("Searchable findings tied")) {
+if (!read("assets/og-image.svg").includes("Record the context your")) {
   fail("site/assets/og-image.svg: social preview message does not match the homepage");
 }
 

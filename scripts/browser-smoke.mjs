@@ -18,11 +18,14 @@ const chromiumProfiles = [
   { name: "412-dark-reduced", viewport: { width: 412, height: 915 }, colorScheme: "dark", reducedMotion: "reduce" },
   { name: "680-light", viewport: { width: 680, height: 800 } },
   { name: "768-light", viewport: { width: 768, height: 1024 } },
+  { name: "900-light", viewport: { width: 900, height: 800 } },
+  { name: "901-light", viewport: { width: 901, height: 800 } },
   { name: "940-light", viewport: { width: 940, height: 700 } },
   { name: "999-light", viewport: { width: 999, height: 800 } },
   { name: "1000-light", viewport: { width: 1000, height: 800 } },
   { name: "1001-light", viewport: { width: 1001, height: 800 } },
   { name: "1024-light", viewport: { width: 1024, height: 768 } },
+  { name: "1140-light", viewport: { width: 1140, height: 900 } },
   { name: "1280-light", viewport: { width: 1280, height: 900 } },
   { name: "1440-light", viewport: { width: 1440, height: 1000 } },
   { name: "1920-dark-reduced", viewport: { width: 1920, height: 1080 }, colorScheme: "dark", reducedMotion: "reduce" },
@@ -185,6 +188,28 @@ async function inspectPage(browserName, browser, profile, route) {
       const githubVisible = await page.locator('.site-nav a[href^="https://github.com/"]').isVisible();
       if (!installVisible || !githubVisible) errors.push("mobile navigation must show Install and GitHub");
     }
+
+    const flowItems = await page.locator(".ledger-sequence li").evaluateAll((elements) =>
+      elements.map((element) => {
+        const bounds = element.getBoundingClientRect();
+        return { left: bounds.left, top: bounds.top };
+      }),
+    );
+    if (profile.viewport.width > 900) {
+      const topSpread = Math.max(...flowItems.map((item) => item.top))
+        - Math.min(...flowItems.map((item) => item.top));
+      const progressesLeftToRight = flowItems.every((item, index) =>
+        index === 0 || item.left > flowItems[index - 1].left,
+      );
+      if (topSpread > 1 || !progressesLeftToRight) {
+        errors.push("desktop workflow is not one left-to-right sequence");
+      }
+    } else {
+      const progressesTopToBottom = flowItems.every((item, index) =>
+        index === 0 || item.top > flowItems[index - 1].top,
+      );
+      if (!progressesTopToBottom) errors.push("narrow workflow is not one top-to-bottom sequence");
+    }
   }
 
   if (route === "/404.html" && profile.viewport.width <= 680) {
@@ -297,7 +322,7 @@ async function inspectNavigationAndFallbacks(browser) {
     if (fallbackPage.url() !== productionURL.href) {
       errors.push(`custom 404 home resolved to ${fallbackPage.url()}`);
     }
-    if ((await fallbackPage.locator("h1").innerText()) !== "Use earlier findings when similar work comes back.") {
+    if ((await fallbackPage.locator("h1").innerText()) !== "Record the context your next agent will need.") {
       errors.push("custom 404 home link did not load the site index");
     }
     await fallbackPage.close();
