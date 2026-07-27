@@ -13,10 +13,19 @@ $ npm ci
 $ npm test
 ```
 
-`npm test` checks copy and internal links, serves the site locally, renders the
-four pages in Chromium at desktop, tablet, mobile, and 320-pixel widths, checks
-color and reduced-motion preferences, runs axe-core, and rejects console
-errors, unexpected network requests, broken anchors, and horizontal overflow.
+`npm test` checks copy and internal links, serves the site on an available
+local port, and renders all four pages in Chromium from 280 through 2560
+pixels, including both sides of the main responsive breakpoint. It checks
+color and reduced-motion preferences, keyboard focus, text spacing, axe-core,
+custom 404 behavior, console errors, unexpected network requests, broken
+anchors, and horizontal overflow.
+
+Before publishing, run the same browser checks in Chromium, Firefox, and
+WebKit:
+
+```console
+$ npm run check:browser:full
+```
 
 Start a local server with:
 

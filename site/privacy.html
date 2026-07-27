@@ -33,26 +33,26 @@
   <main id="main" class="page shell">
     <header class="page-header">
       <h1>Privacy</h1>
-      <p>This website is static. Motus keeps its ledger on your machine.</p>
+      <p>The Motus command-line application does not upload the ledger. This website does not collect ledger data or run client-side analytics.</p>
     </header>
 
     <div class="page-body">
-      <section aria-labelledby="site-title">
-        <h2 id="site-title">This website</h2>
-        <p>The site has no analytics, advertising, cookies, forms, accounts, or client-side JavaScript. It never receives your Motus ledger.</p>
-        <p>GitHub Pages may process standard request data such as your IP address, browser, requested URL, and request time. See <a href="https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement">GitHub's privacy statement</a>.</p>
-      </section>
-
       <section aria-labelledby="app-title">
-        <h2 id="app-title">The command-line application</h2>
-        <p>Motus stores selected command facts in <code>.motus/ledger.db</code> at the current Git root, or in the current directory outside Git. You can choose another path. Motus does not send the ledger anywhere.</p>
-        <p>Wrapped-command argument values and stdin, raw stdout and stderr, environment variables, source files, prompts, and transcripts are not stored.</p>
-        <p>Motus stores finding text and closure notes only when you submit them. They remain until you delete the ledger file.</p>
+        <h2 id="app-title">Application data</h2>
+        <p>By default, Motus writes <code>.motus/ledger.db</code> at the current Git root. Outside Git, it uses the current directory. You can select another state directory.</p>
+        <p>Run records contain selected metadata: identifiers, timestamps, executable name, argument count, Git state, output counts, exit status, and outcome. They do not contain command argument values, stdin, raw output, environment variables, source files, prompts, or transcripts.</p>
+        <p>Findings and closure notes are different: Motus stores the exact text you submit through a file or standard input.</p>
       </section>
 
       <section aria-labelledby="control-title">
-        <h2 id="control-title">Your control</h2>
-        <p>The ledger is a local SQLite file. You choose its location, backups, access, and deletion. Add <code>.motus/</code> to <code>.gitignore</code> if it should stay out of version control.</p>
+        <h2 id="control-title">Your state directory</h2>
+        <p>SQLite may create <code>ledger.db-wal</code> and <code>ledger.db-shm</code> beside <code>ledger.db</code>. Add <code>.motus/</code> to <code>.gitignore</code> when the default state should remain outside version control. Anyone who can read the state directory or its backups can read the findings stored there.</p>
+        <p>If you place the state directory in shared or synchronized storage, that system's privacy and retention rules apply. To remove Motus state, stop processes using it and delete the entire state directory and any backups you control.</p>
+      </section>
+
+      <section aria-labelledby="site-title">
+        <h2 id="site-title">This website</h2>
+        <p>The site has no analytics, advertising, cookies, forms, accounts, or client-side JavaScript. GitHub Pages may process standard request data such as your IP address, browser, requested URL, and request time. See <a href="https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement">GitHub's privacy statement</a>.</p>
       </section>
     </div>
   </main>

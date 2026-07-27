@@ -15,7 +15,9 @@ const productionURL = new URL("https://www.motussupra.com/");
 const forbiddenPhrases = [
   "ai-powered",
   "at scale",
+  "agentic platform",
   "context layer",
+  "context platform",
   "control plane",
   "empower",
   "future-proof",
@@ -28,6 +30,7 @@ const forbiddenPhrases = [
   "leverage",
   "next-generation",
   "not just",
+  "memory platform",
   "powerful platform",
   "revolutionize",
   "seamlessly",
@@ -39,29 +42,46 @@ const forbiddenPhrases = [
 ];
 const requiredPhrases = {
   "index.html": [
+    'id="workflow"',
     'id="example"',
     'id="install"',
-    "Save the explanation with the run.",
-    "Motus is a local work ledger.",
-    "A developer adds a note",
-    "An agent searches later",
-    "Standing instructions belong in a README.",
+    "Record the context your next agent will need.",
+    "Motus links authored explanations, constraints, workarounds, and decisions",
+    "Later agents can search the same ledger",
+    "How Motus works",
+    "Record a run",
+    "Add a finding",
+    "Tell agents when to search",
+    "Search before similar work",
+    "A lesson from building Motus",
+    "One agent reviewed Motus",
+    "<h3 id=\"earlier-title\">Recorded</h3>",
+    "<h3 id=\"later-title\">Retrieved</h3>",
+    "Motus stores run metadata, not raw output.",
+    "the next agent starts with the known failure mode",
+    "constraints, workarounds, and decisions",
+    "Download Motus",
+    "Install and record",
+    "Add and retrieve",
     "go install github.com/motus-os/work-ledger/cmd/motus@latest",
     "$ motus version",
     "--file finding.txt",
-    "finding list --query generated",
+    'finding list --query "repository history"',
     "finding show finding_...",
     ".motus/ledger.db",
     ".gitignore",
-    "same commands and state directory",
-    "does not store raw command output",
+    "Use one state directory",
+    "does not upload the ledger or store raw command output",
   ],
   "security.html": [
-    "event and finding payload hashes",
+    "payload hashes and links between findings and runs",
+    "deterministic JSON projection",
     "Review that text before recording it.",
   ],
   "privacy.html": [
-    "Motus stores finding text and closure notes only when you submit them",
+    "Motus stores the exact text you submit",
+    "ledger.db-wal",
+    "delete the entire state directory",
   ],
 };
 const failures = [];
@@ -205,7 +225,7 @@ for (const required of [
 ]) {
   if (!fs.existsSync(path.join(siteRoot, required))) fail(`missing ${required}`);
 }
-if (!read("assets/og-image.svg").includes("Save the explanation")) {
+if (!read("assets/og-image.svg").includes("Record the context your")) {
   fail("site/assets/og-image.svg: social preview message does not match the homepage");
 }
 
