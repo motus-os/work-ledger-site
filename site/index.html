@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Motus Work Ledger | Context tied to recorded work</title>
-  <meta name="description" content="Motus links explanations, constraints, workarounds, and decisions to recorded command runs so developers and coding agents can find them before similar work.">
+  <meta name="description" content="Motus connects explanations, constraints, workarounds, and decisions to recorded command runs so later agents can use them before similar work.">
   <link rel="canonical" href="https://www.motussupra.com/">
   <meta property="og:type" content="website">
   <meta property="og:title" content="Motus Work Ledger">
@@ -43,7 +43,7 @@
     <section class="hero shell" aria-labelledby="hero-title">
       <div class="hero-copy">
         <h1 id="hero-title">Record the context your next agent will need.</h1>
-        <p class="hero-lede">Motus links authored explanations, constraints, workarounds, and decisions to recorded run facts. Later agents can search the same ledger before similar work.</p>
+        <p class="hero-lede">Motus connects explanations, constraints, workarounds, and decisions to command runs. Later agents can find both before similar work instead of repeating the investigation.</p>
         <div class="hero-actions">
           <a class="button" href="#install">Install Motus</a>
           <a class="text-link" href="#workflow">See how it works</a>
@@ -58,28 +58,29 @@
 
       <ol class="ledger-sequence" aria-label="The Motus workflow">
         <li>
-          <span>Record a run</span>
-          <strong>Wrap a test, build, script, or review. Motus keeps selected run facts.</strong>
+          <span>Record the work</span>
+          <strong>Run a test, build, script, or review through Motus.</strong>
         </li>
         <li>
-          <span>Add a finding</span>
-          <strong>A person, agent, or script adds reusable context or a next step.</strong>
+          <span>Keep what matters</span>
+          <strong>A person, agent, or script adds an explanation, constraint, workaround, decision, or next step.</strong>
         </li>
         <li>
-          <span>Tell agents when to search</span>
-          <strong>Give later agents the same ledger and add the search to <code>AGENTS.md</code>.</strong>
+          <span>Search before related work</span>
+          <strong>A later workflow retrieves the finding with its source run.</strong>
         </li>
         <li>
-          <span>Search before similar work</span>
-          <strong>Retrieve the finding and inspect its source run before acting.</strong>
+          <span>Use it and validate</span>
+          <strong>Choose the next action, validate it, then close the finding with a successful recorded run.</strong>
         </li>
       </ol>
+      <p class="workflow-note"><code>AGENTS.md</code> can tell coding agents to search before related work.</p>
     </section>
 
     <section class="section shell" id="example" aria-labelledby="example-title">
       <div class="section-intro">
-        <h2 id="example-title">A lesson from building Motus</h2>
-        <p>One agent reviewed Motus from a shallow clone and counted 92 commits. Another checked GitHub and found 512. We recorded the mistake and the checks for the next history review.</p>
+        <h2 id="example-title">A finding from building Motus</h2>
+        <p>An agent reported 92 commits from a shallow clone. GitHub showed 512. The command succeeded, but the conclusion was incomplete. We recorded the failure mode and the checks for the next review.</p>
         <p class="output-note">Abridged. Motus stores run metadata, not raw output.</p>
       </div>
 
@@ -95,35 +96,55 @@ $ motus finding add --run run_c703... \
 Recorded finding_9844... (open)</code></pre>
           <div class="authored-note">
             <span>Finding</span>
-            <p>Shallow local history could not establish the full repository history. Next time, check the clone state and compare the same branch with GitHub.</p>
+            <p>A successful local count did not establish the repository history. Check whether the clone is shallow and compare the same branch with GitHub.</p>
           </div>
         </article>
 
         <article class="story-part" aria-labelledby="later-title">
-          <h3 id="later-title">Retrieved</h3>
-          <pre tabindex="0"><code>$ motus finding list --state open \
+          <h3 id="later-title">Used on the next review</h3>
+          <pre tabindex="0"><code>$ motus finding list \
     --query "repository history"
 finding_9844...  open  A shallow clone of main...
 
 $ motus finding show finding_9844...
 Origin run: run_c703...  success
 Summary: A shallow clone of main exposed 92...
-Next step: Check whether the clone is shallow...</code></pre>
+Next step: Check whether the clone is shallow...
+
+$ motus wrap -- git rev-parse --is-shallow-repository
+true
+motus: recorded run_eefb... (success)
+
+$ motus wrap -- gh api graphql -f 'query={
+  repository(owner:"motus-os",name:"motus"){
+    object(expression:"main"){... on Commit{
+      history{totalCount}
+    }}
+  }
+}' \
+    --jq '.data.repository.object.history.totalCount'
+512
+motus: recorded run_7498... (success)
+
+$ printf '%s\n' 'Remote history checked.' | \
+    motus finding close finding_9844... \
+      --disposition resolved --run run_7498... --file -
+Closed finding_9844... (resolved)</code></pre>
           <div class="authored-note">
-            <span>Before the next review</span>
-            <p><code>AGENTS.md</code> tells a later agent to query Motus first. The agent sees the mistake, source run, and required check.</p>
+            <span>Changed action</span>
+            <p>The agent checks the clone and remote before reporting a count instead of trusting the successful local command.</p>
           </div>
         </article>
       </div>
 
-      <p class="example-context">When repository history comes up again, the next agent starts with the known failure mode and the run that exposed it. The same workflow carries constraints, workarounds, and decisions between sessions.</p>
+      <p class="example-context">The next review starts with the finding, records the missing evidence, avoids the incorrect conclusion, and closes the finding.</p>
     </section>
 
     <section class="section shell" id="install" aria-labelledby="install-title">
       <div class="section-intro">
         <h2 id="install-title">Install</h2>
-        <p><a href="https://github.com/motus-os/work-ledger/releases/latest">Download Motus</a> for macOS, Linux, or Windows, or install with Go. Record a test, build, script, or review you already run.</p>
-        <p class="state-note">Motus creates <code>.motus/ledger.db</code> at the Git root. Add <code>.motus/</code> to <code>.gitignore</code>. Use one state directory wherever people, agents, scripts, or CI need the same records.</p>
+        <p><a href="https://github.com/motus-os/work-ledger/releases/latest">Download Motus</a> for macOS, Linux, or Windows, or install with Go. Start with a command you already run.</p>
+        <p class="state-note">Motus creates <code>.motus/ledger.db</code> at the Git root or current directory outside Git. Add <code>.motus/</code> to <code>.gitignore</code>. Choose an explicit state directory for records shared across workspaces.</p>
       </div>
 
       <div class="start-commands" aria-label="Install and first-use commands">
@@ -142,7 +163,7 @@ $ motus finding show finding_...</code></pre>
       </div>
 
       <p class="documentation-link"><a href="https://github.com/motus-os/work-ledger#readme">Read the documentation</a></p>
-      <p class="trust-line">Motus runs on demand, uses SQLite, and requires no account or hosted service. It does not upload the ledger or store raw command output.</p>
+      <p class="trust-line">Motus runs on demand, uses SQLite, and needs no account or server. It does not upload the ledger or store raw command output.</p>
     </section>
   </main>
 

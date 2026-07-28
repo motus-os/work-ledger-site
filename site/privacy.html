@@ -41,7 +41,7 @@
         <h2 id="app-title">Application data</h2>
         <p>By default, Motus writes <code>.motus/ledger.db</code> at the current Git root. Outside Git, it uses the current directory. You can select another state directory.</p>
         <p>Run records contain selected metadata: identifiers, timestamps, executable name, argument count, Git state, output counts, exit status, and outcome. They do not contain command argument values, stdin, raw output, environment variables, source files, prompts, or transcripts.</p>
-        <p>Findings and closure notes are different: Motus stores the exact text you submit through a file or standard input.</p>
+        <p>Findings and closure notes are different: Motus stores the validated text you submit through a file or standard input after removing one trailing line ending.</p>
       </section>
 
       <section aria-labelledby="control-title">
