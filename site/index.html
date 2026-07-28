@@ -102,7 +102,7 @@ Recorded finding_9844... (open)</code></pre>
 
         <article class="story-part" aria-labelledby="later-title">
           <h3 id="later-title">Used on the next review</h3>
-          <pre tabindex="0"><code>$ motus finding list --state open \
+          <pre tabindex="0"><code>$ motus finding list \
     --query "repository history"
 finding_9844...  open  A shallow clone of main...
 
@@ -111,14 +111,25 @@ Origin run: run_c703...  success
 Summary: A shallow clone of main exposed 92...
 Next step: Check whether the clone is shallow...
 
-$ git rev-parse --is-shallow-repository
+$ motus wrap -- git rev-parse --is-shallow-repository
 true
+motus: recorded run_eefb... (success)
 
-$ repo=motus-os/motus
-$ gh api --paginate \
-    "repos/$repo/commits?sha=main&amp;per_page=100" \
-    --jq '.[].sha' | wc -l
-512</code></pre>
+$ motus wrap -- gh api graphql -f 'query={
+  repository(owner:"motus-os",name:"motus"){
+    object(expression:"main"){... on Commit{
+      history{totalCount}
+    }}
+  }
+}' \
+    --jq '.data.repository.object.history.totalCount'
+512
+motus: recorded run_7498... (success)
+
+$ printf '%s\n' 'Remote history checked.' | \
+    motus finding close finding_9844... \
+      --disposition resolved --run run_7498... --file -
+Closed finding_9844... (resolved)</code></pre>
           <div class="authored-note">
             <span>Changed action</span>
             <p>The agent checks the clone and remote before reporting a count instead of trusting the successful local command.</p>
@@ -126,7 +137,7 @@ $ gh api --paginate \
         </article>
       </div>
 
-      <p class="example-context">The next review starts with the finding, checks the missing evidence, and avoids the incorrect conclusion.</p>
+      <p class="example-context">The next review starts with the finding, records the missing evidence, avoids the incorrect conclusion, and closes the finding.</p>
     </section>
 
     <section class="section shell" id="install" aria-labelledby="install-title">
