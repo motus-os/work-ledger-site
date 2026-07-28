@@ -189,13 +189,31 @@ async function inspectPage(browserName, browser, profile, route) {
       if (!installVisible || !githubVisible) errors.push("mobile navigation must show Install and GitHub");
     }
 
-    const flowItems = await page.locator(".ledger-sequence li").evaluateAll((elements) =>
+    const flowItems = await page.locator(".workflow-step").evaluateAll((elements) =>
       elements.map((element) => {
         const bounds = element.getBoundingClientRect();
-        return { left: bounds.left, top: bounds.top };
+        return { left: bounds.left, top: bounds.top, right: bounds.right, bottom: bounds.bottom };
       }),
     );
-    if (profile.viewport.width > 900) {
+    if (flowItems.length !== 3) errors.push(`workflow has ${flowItems.length} stages instead of 3`);
+    const artifactOverflow = await page.locator(".workflow-artifact, .example-artifact").evaluateAll((elements) =>
+      elements.map((element) => {
+        const parent = element.getBoundingClientRect();
+        const children = [...element.children].map((child) => child.getBoundingClientRect());
+        return {
+          left: Math.max(0, parent.left - Math.min(parent.left, ...children.map((child) => child.left))),
+          right: Math.max(0, Math.max(parent.right, ...children.map((child) => child.right)) - parent.right),
+          top: Math.max(0, parent.top - Math.min(parent.top, ...children.map((child) => child.top))),
+          bottom: Math.max(0, Math.max(parent.bottom, ...children.map((child) => child.bottom)) - parent.bottom),
+        };
+      }),
+    );
+    for (const [index, overflowAmount] of artifactOverflow.entries()) {
+      if (Object.values(overflowAmount).some((amount) => amount > 1)) {
+        errors.push(`visual artifact ${index + 1} clips content: ${JSON.stringify(overflowAmount)}`);
+      }
+    }
+    if (profile.viewport.width > 1000) {
       const topSpread = Math.max(...flowItems.map((item) => item.top))
         - Math.min(...flowItems.map((item) => item.top));
       const progressesLeftToRight = flowItems.every((item, index) =>
@@ -204,11 +222,61 @@ async function inspectPage(browserName, browser, profile, route) {
       if (topSpread > 1 || !progressesLeftToRight) {
         errors.push("desktop workflow is not one left-to-right sequence");
       }
+      const artifactCenters = await page.locator(".workflow-artifact").evaluateAll((elements) =>
+        elements.map((element) => {
+          const bounds = element.getBoundingClientRect();
+          return bounds.top + bounds.height / 2;
+        }),
+      );
+      const centerSpread = Math.max(...artifactCenters) - Math.min(...artifactCenters);
+      if (centerSpread > 1) errors.push(`desktop workflow artifacts do not share one path (${centerSpread}px spread)`);
+      if (profile.viewport.width >= 1140) {
+        const flowBottom = await page.locator(".product-flow").evaluate((element) =>
+          element.getBoundingClientRect().bottom,
+        );
+        if (flowBottom > profile.viewport.height + 1) {
+          errors.push(`desktop workflow ends below the first viewport by ${Math.ceil(flowBottom - profile.viewport.height)}px`);
+        }
+      }
     } else {
       const progressesTopToBottom = flowItems.every((item, index) =>
         index === 0 || item.top > flowItems[index - 1].top,
       );
       if (!progressesTopToBottom) errors.push("narrow workflow is not one top-to-bottom sequence");
+    }
+
+    const exampleItems = await page.locator("[data-example-stage]").evaluateAll((elements) =>
+      elements.map((element) => {
+        const bounds = element.getBoundingClientRect();
+        return { left: bounds.left, top: bounds.top };
+      }),
+    );
+    if (exampleItems.length !== 3) errors.push(`example has ${exampleItems.length} stages instead of 3`);
+    const exampleAccessibility = await page.locator('[data-example-stage="next"]').ariaSnapshot();
+    for (const phrase of [
+      "motus finding list --query shallow",
+      "Finding + source-run ID retrieved",
+      "Then the agent checks GitHub",
+      "512 commits",
+    ]) {
+      if (!exampleAccessibility.includes(phrase)) {
+        errors.push(`accessible example omits ${JSON.stringify(phrase)}`);
+      }
+    }
+    if (profile.viewport.width > 1000) {
+      const topSpread = Math.max(...exampleItems.map((item) => item.top))
+        - Math.min(...exampleItems.map((item) => item.top));
+      const progressesLeftToRight = exampleItems.every((item, index) =>
+        index === 0 || item.left > exampleItems[index - 1].left,
+      );
+      if (topSpread > 1 || !progressesLeftToRight) {
+        errors.push("desktop example is not one left-to-right sequence");
+      }
+    } else {
+      const progressesTopToBottom = exampleItems.every((item, index) =>
+        index === 0 || item.top > exampleItems[index - 1].top,
+      );
+      if (!progressesTopToBottom) errors.push("narrow example is not one top-to-bottom sequence");
     }
   }
 
@@ -262,6 +330,43 @@ async function inspectTextSpacing(browser) {
     const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
     await context.close();
     if (overflow > 1) throw new Error(`text-spacing check overflowed by ${overflow}px at ${viewport.width}px`);
+  }
+}
+
+async function inspectTextZoom(browser) {
+  for (const viewport of [{ width: 320, height: 700 }, { width: 1440, height: 1000 }]) {
+    const context = await browser.newContext({ viewport });
+    await routeProductionSite(context);
+    const page = await context.newPage();
+    await page.goto(baseURL, { waitUntil: "networkidle" });
+    await page.evaluate(() => {
+      document.documentElement.style.fontSize = "200%";
+    });
+    const result = await page.evaluate(() => {
+      const artifacts = [...document.querySelectorAll(".workflow-artifact, .example-artifact")];
+      return {
+        pageOverflow: document.documentElement.scrollWidth - document.documentElement.clientWidth,
+        artifactOverflow: artifacts.map((element) => {
+          const parent = element.getBoundingClientRect();
+          const children = [...element.children].map((child) => child.getBoundingClientRect());
+          return {
+            left: Math.max(0, parent.left - Math.min(parent.left, ...children.map((child) => child.left))),
+            right: Math.max(0, Math.max(parent.right, ...children.map((child) => child.right)) - parent.right),
+            top: Math.max(0, parent.top - Math.min(parent.top, ...children.map((child) => child.top))),
+            bottom: Math.max(0, Math.max(parent.bottom, ...children.map((child) => child.bottom)) - parent.bottom),
+          };
+        }),
+      };
+    });
+    await context.close();
+    if (result.pageOverflow > 1) {
+      throw new Error(`200% text check overflowed the page by ${result.pageOverflow}px at ${viewport.width}px`);
+    }
+    for (const [index, overflowAmount] of result.artifactOverflow.entries()) {
+      if (Object.values(overflowAmount).some((amount) => amount > 1)) {
+        throw new Error(`200% text check clipped visual artifact ${index + 1} at ${viewport.width}px: ${JSON.stringify(overflowAmount)}`);
+      }
+    }
   }
 }
 
@@ -346,10 +451,11 @@ try {
     }
     if (spec.name === "chromium") {
       await inspectTextSpacing(browser);
+      await inspectTextZoom(browser);
       await inspectNavigationAndFallbacks(browser);
     }
   }
-  console.log(`PASS browser and accessibility checks (${renderCount} renders across ${browserSpecs.length} browser engine(s), 2 text-spacing views, 2 custom 404 fallbacks)`);
+  console.log(`PASS browser and accessibility checks (${renderCount} renders across ${browserSpecs.length} browser engine(s), 2 text-spacing views, 2 text-zoom views, 2 custom 404 fallbacks)`);
 } finally {
   await Promise.all(browsers.map((browser) => browser.close()));
   if (server.listening) await new Promise((resolve) => server.close(resolve));

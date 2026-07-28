@@ -45,21 +45,41 @@ const requiredPhrases = {
     'id="workflow"',
     'id="example"',
     'id="install"',
-    "recorded command runs",
-    "A person, agent, or script",
-    "close the finding with a successful recorded run",
-    "<h3 id=\"earlier-title\">Recorded</h3>",
-    "Motus stores run metadata, not raw output.",
+    "Motus gives developers and coding agents a local, searchable record",
+    "How Motus works",
+    "Context added",
+    "Run the command through Motus",
+    "Motus records the outcome and, when available, the repository and commit.",
+    "A developer or agent adds the context worth keeping.",
+    "Local ledger",
+    "Motus links the finding to the run",
+    "Both stay in the same local, searchable ledger.",
+    "Search before similar work",
+    "Run ID",
+    "Motus returns the finding and run ID before the next action.",
+    "The next agent did not repeat the mistake.",
+    "an agent treated the 92 commits in a shallow clone as the repository's full history.",
+    "Check whether the clone is shallow. Compare the same branch with GitHub before drawing conclusions.",
+    "motus finding list --query shallow",
+    "Finding + source-run ID retrieved",
+    "Then the agent checks GitHub",
+    "GitHub main",
+    "512 commits",
+    "The next agent found the correction and its source run before reporting",
+    "Keep the standing rule in project documentation",
+    "Motus keeps the finding, origin run, and resolving run.",
     "Download Motus",
     "go install github.com/motus-os/work-ledger/cmd/motus@latest",
     "$ motus version",
+    "$ motus wrap -- npm test",
     "--file finding.txt",
-    'finding list --query "repository history"',
+    'finding list --query "generated file"',
     "finding show finding_...",
     ".motus/ledger.db",
     ".gitignore",
-    "Choose an explicit state directory",
-    "does not upload the ledger or store raw command output",
+    "Share or restore the state directory.",
+    "Put the search step in your agent or workflow instructions.",
+    "No account or server is required.",
   ],
   "security.html": [
     "payload hashes and links between findings and runs",
@@ -213,7 +233,7 @@ for (const required of [
 ]) {
   if (!fs.existsSync(path.join(siteRoot, required))) fail(`missing ${required}`);
 }
-if (!read("assets/og-image.svg").includes("Record the context your")) {
+if (!read("assets/og-image.svg").includes("Local work ledger for developers")) {
   fail("site/assets/og-image.svg: social preview message does not match the homepage");
 }
 

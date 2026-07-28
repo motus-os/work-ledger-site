@@ -3,15 +3,15 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Motus Work Ledger | Context tied to recorded work</title>
-  <meta name="description" content="Motus connects explanations, constraints, workarounds, and decisions to recorded command runs so later agents can use them before similar work.">
+  <title>Motus Work Ledger | Reusable context for later work</title>
+  <meta name="description" content="Motus gives developers and coding agents a local, searchable record of command runs and the context tied to them.">
   <link rel="canonical" href="https://www.motussupra.com/">
   <meta property="og:type" content="website">
   <meta property="og:title" content="Motus Work Ledger">
-  <meta property="og:description" content="Record the context your next agent will need and keep it connected to the command run behind it.">
+  <meta property="og:description" content="A local, searchable record of command runs and the context tied to them.">
   <meta property="og:url" content="https://www.motussupra.com/">
   <meta property="og:image" content="https://www.motussupra.com/assets/og-image.png">
-  <meta property="og:image:alt" content="Motus Work Ledger. Record the context your next agent will need.">
+  <meta property="og:image:alt" content="Motus Work Ledger. Reusable context for later developer and agent work.">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="theme-color" content="#f7f8fa">
   <link rel="icon" href="./assets/favicon.svg" type="image/svg+xml">
@@ -43,127 +43,225 @@
     <section class="hero shell" aria-labelledby="hero-title">
       <div class="hero-copy">
         <h1 id="hero-title">Record the context your next agent will need.</h1>
-        <p class="hero-lede">Motus connects explanations, constraints, workarounds, and decisions to command runs. Later agents can find both before similar work instead of repeating the investigation.</p>
-        <div class="hero-actions">
-          <a class="button" href="#install">Install Motus</a>
-          <a class="text-link" href="#workflow">See how it works</a>
+        <p class="hero-lede">Motus gives developers and coding agents a local, searchable record of command runs and the context tied to them.</p>
+      </div>
+
+      <figure class="product-flow" id="workflow" aria-labelledby="workflow-title">
+        <figcaption id="workflow-title">How Motus works</figcaption>
+        <div class="workflow-story">
+          <section class="workflow-step" data-flow-stage="now" aria-labelledby="work-now-title">
+            <p class="workflow-time">Now</p>
+            <div class="workflow-artifact workflow-capture" aria-hidden="true">
+              <div class="workflow-terminal">
+                <svg viewBox="0 0 24 24">
+                  <rect x="2.5" y="3.5" width="19" height="17" rx="2.5"></rect>
+                  <path d="m7 9 2.5 2.5L7 14M12.5 14H17"></path>
+                </svg>
+                <code>$ your command</code>
+              </div>
+              <div class="workflow-note">
+                <svg viewBox="0 0 24 24">
+                  <path d="M5 3.5h10.5L19 7v13.5H5z"></path>
+                  <path d="M15.5 3.5V7H19M8.5 11h7M8.5 14.5h5M8.5 18h3"></path>
+                </svg>
+                <span>Context added</span>
+              </div>
+            </div>
+            <h2 id="work-now-title">Run the command through Motus</h2>
+            <p>Motus records the outcome and, when available, the repository and commit. A developer or agent adds the context worth keeping.</p>
+          </section>
+
+          <span class="workflow-arrow" aria-hidden="true">
+            <svg viewBox="0 0 80 24" preserveAspectRatio="none">
+              <path d="M2 12h72"></path>
+              <path d="m66 4 8 8-8 8"></path>
+            </svg>
+          </span>
+
+          <section class="workflow-step workflow-ledger-step" data-flow-stage="ledger" aria-labelledby="ledger-title">
+            <p class="workflow-time">Local ledger</p>
+            <div class="workflow-artifact workflow-ledger" aria-hidden="true">
+              <div class="workflow-ledger-head">
+                <svg viewBox="0 0 28 28">
+                  <rect width="28" height="28" rx="6"></rect>
+                  <path d="M7 8.5h2.5M12 8.5h9M7 14h2.5M12 14h9M7 19.5h2.5M12 19.5h9"></path>
+                </svg>
+                <strong>Motus</strong>
+              </div>
+              <div class="workflow-ledger-records">
+                <div>
+                  <span>Run</span>
+                  <small>repo · commit · outcome</small>
+                </div>
+                <div>
+                  <span>Finding</span>
+                  <small>context for later work</small>
+                </div>
+              </div>
+            </div>
+            <h2 id="ledger-title">Motus links the finding to the run</h2>
+            <p>Both stay in the same local, searchable ledger.</p>
+          </section>
+
+          <span class="workflow-arrow" aria-hidden="true">
+            <svg viewBox="0 0 80 24" preserveAspectRatio="none">
+              <path d="M2 12h72"></path>
+              <path d="m66 4 8 8-8 8"></path>
+            </svg>
+          </span>
+
+          <section class="workflow-step" data-flow-stage="later" aria-labelledby="work-later-title">
+            <p class="workflow-time">Later</p>
+            <div class="workflow-artifact workflow-retrieval" aria-hidden="true">
+              <div class="workflow-query">
+                <svg class="workflow-query-terminal" viewBox="0 0 24 24">
+                  <rect x="2.5" y="3.5" width="19" height="17" rx="2.5"></rect>
+                  <path d="m7 9 2.5 2.5L7 14M12.5 14H17"></path>
+                </svg>
+                <code>motus finding list --query term</code>
+                <svg class="workflow-query-search" viewBox="0 0 24 24">
+                  <circle cx="10.5" cy="10.5" r="6"></circle>
+                  <path d="m15 15 5 5"></path>
+                </svg>
+              </div>
+              <div class="workflow-result-pair">
+                <span>Finding</span>
+                <span>Run ID</span>
+              </div>
+            </div>
+            <h2 id="work-later-title">Search before similar work</h2>
+            <p>A developer or agent searches the ledger. Motus returns the finding and run ID before the next action.</p>
+          </section>
         </div>
-      </div>
-    </section>
+      </figure>
 
-    <section class="section shell workflow" id="workflow" aria-labelledby="workflow-title">
-      <div class="section-intro">
-        <h2 id="workflow-title">How Motus works</h2>
+      <div class="hero-actions">
+        <a class="button" href="#install">Install Motus</a>
+        <a class="text-link" href="#example">See a real example</a>
       </div>
-
-      <ol class="ledger-sequence" aria-label="The Motus workflow">
-        <li>
-          <span>Record the work</span>
-          <strong>Run a test, build, script, or review through Motus.</strong>
-        </li>
-        <li>
-          <span>Keep what matters</span>
-          <strong>A person, agent, or script adds an explanation, constraint, workaround, decision, or next step.</strong>
-        </li>
-        <li>
-          <span>Search before related work</span>
-          <strong>A later workflow retrieves the finding with its source run.</strong>
-        </li>
-        <li>
-          <span>Use it and validate</span>
-          <strong>Choose the next action, validate it, then close the finding with a successful recorded run.</strong>
-        </li>
-      </ol>
-      <p class="workflow-note"><code>AGENTS.md</code> can tell coding agents to search before related work.</p>
     </section>
 
     <section class="section shell" id="example" aria-labelledby="example-title">
       <div class="section-intro">
-        <h2 id="example-title">A finding from building Motus</h2>
-        <p>An agent reported 92 commits from a shallow clone. GitHub showed 512. The command succeeded, but the conclusion was incomplete. We recorded the failure mode and the checks for the next review.</p>
-        <p class="output-note">Abridged. Motus stores run metadata, not raw output.</p>
+        <h2 id="example-title">The next agent did not repeat the mistake.</h2>
+        <p>While building Motus, an agent treated the 92 commits in a shallow clone as the repository's full history. Motus kept the correction.</p>
       </div>
 
-      <div class="story-grid">
-        <article class="story-part" aria-labelledby="earlier-title">
-          <h3 id="earlier-title">Recorded</h3>
-          <pre tabindex="0"><code>$ motus wrap -- git rev-list --count HEAD
-92
-motus: recorded run_c703... (success)
-
-$ motus finding add --run run_c703... \
-    --format json --file finding.json
-Recorded finding_9844... (open)</code></pre>
-          <div class="authored-note">
-            <span>Finding</span>
-            <p>A successful local count did not establish the repository history. Check whether the clone is shallow and compare the same branch with GitHub.</p>
+      <div class="example-story" aria-label="A later agent avoids repeating an unsupported repository-history conclusion">
+        <article class="example-scene" data-example-stage="first">
+          <span class="example-label">First review</span>
+          <div class="example-artifact example-local" aria-hidden="true">
+            <div class="example-artifact-head">
+              <svg viewBox="0 0 24 24">
+                <rect x="2.5" y="3.5" width="19" height="17" rx="2.5"></rect>
+                <path d="m7 9 2.5 2.5L7 14M12.5 14H17"></path>
+              </svg>
+              <span>Local clone</span>
+            </div>
+            <strong>92 commits</strong>
+            <small>Treated as complete history</small>
           </div>
+          <p class="example-outcome example-warning">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M12 3 22 21H2zM12 9v5M12 18h.01"></path>
+            </svg>
+            Incomplete evidence
+          </p>
         </article>
 
-        <article class="story-part" aria-labelledby="later-title">
-          <h3 id="later-title">Used on the next review</h3>
-          <pre tabindex="0"><code>$ motus finding list \
-    --query "repository history"
-finding_9844...  open  A shallow clone of main...
+        <span class="example-story-arrow" aria-hidden="true">
+          <svg viewBox="0 0 80 24" preserveAspectRatio="none">
+            <path d="M2 12h72"></path>
+            <path d="m66 4 8 8-8 8"></path>
+          </svg>
+        </span>
 
-$ motus finding show finding_9844...
-Origin run: run_c703...  success
-Summary: A shallow clone of main exposed 92...
-Next step: Check whether the clone is shallow...
-
-$ motus wrap -- git rev-parse --is-shallow-repository
-true
-motus: recorded run_eefb... (success)
-
-$ motus wrap -- gh api graphql -f 'query={
-  repository(owner:"motus-os",name:"motus"){
-    object(expression:"main"){... on Commit{
-      history{totalCount}
-    }}
-  }
-}' \
-    --jq '.data.repository.object.history.totalCount'
-512
-motus: recorded run_7498... (success)
-
-$ printf '%s\n' 'Remote history checked.' | \
-    motus finding close finding_9844... \
-      --disposition resolved --run run_7498... --file -
-Closed finding_9844... (resolved)</code></pre>
-          <div class="authored-note">
-            <span>Changed action</span>
-            <p>The agent checks the clone and remote before reporting a count instead of trusting the successful local command.</p>
+        <blockquote class="example-finding" data-example-stage="finding">
+          <span class="example-label">Stored finding</span>
+          <div class="example-artifact example-finding-card">
+            <div class="example-artifact-head" aria-hidden="true">
+              <svg viewBox="0 0 24 24">
+                <path d="M5 3.5h10.5L19 7v13.5H5z"></path>
+                <path d="M15.5 3.5V7H19M8.5 11h7M8.5 14.5h5M8.5 18h3"></path>
+              </svg>
+              <span>Motus</span>
+            </div>
+            <p>Check whether the clone is shallow. Compare the same branch with GitHub before drawing conclusions.</p>
+            <cite>Linked to the original run</cite>
           </div>
+        </blockquote>
+
+        <span class="example-story-arrow" aria-hidden="true">
+          <svg viewBox="0 0 80 24" preserveAspectRatio="none">
+            <path d="M2 12h72"></path>
+            <path d="m66 4 8 8-8 8"></path>
+          </svg>
+        </span>
+
+        <article class="example-scene" data-example-stage="next">
+          <span class="example-label">Next review</span>
+          <div class="example-artifact example-remote">
+            <div class="example-query">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <rect x="2.5" y="3.5" width="19" height="17" rx="2.5"></rect>
+                <path d="m7 9 2.5 2.5L7 14M12.5 14H17"></path>
+              </svg>
+              <code>motus finding list --query shallow</code>
+            </div>
+            <div class="example-retrieval-result">
+              <div class="example-returned">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M5 3.5h10.5L19 7v13.5H5z"></path>
+                  <path d="M15.5 3.5V7H19M8.5 11h7M8.5 14.5h5"></path>
+                </svg>
+                <span>Finding + source-run ID retrieved</span>
+              </div>
+            </div>
+            <div class="example-check-step">
+              <span>Then the agent checks GitHub</span>
+              <div class="example-repo-result">
+                <small>GitHub main</small>
+                <strong>512 commits</strong>
+              </div>
+            </div>
+          </div>
+          <p class="example-outcome example-success">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <circle cx="12" cy="12" r="9"></circle>
+              <path d="m8 12 2.5 2.5L16.5 8"></path>
+            </svg>
+            Incorrect conclusion avoided
+          </p>
         </article>
       </div>
 
-      <p class="example-context">The next review starts with the finding, records the missing evidence, avoids the incorrect conclusion, and closes the finding.</p>
+      <p class="example-context">The next agent found the correction and its source run before reporting, then checked the current repository. Keep the standing rule in project documentation; Motus keeps the finding, origin run, and resolving run.</p>
     </section>
 
     <section class="section shell" id="install" aria-labelledby="install-title">
       <div class="section-intro">
-        <h2 id="install-title">Install</h2>
-        <p><a href="https://github.com/motus-os/work-ledger/releases/latest">Download Motus</a> for macOS, Linux, or Windows, or install with Go. Start with a command you already run.</p>
-        <p class="state-note">Motus creates <code>.motus/ledger.db</code> at the Git root or current directory outside Git. Add <code>.motus/</code> to <code>.gitignore</code>. Choose an explicit state directory for records shared across workspaces.</p>
+        <h2 id="install-title">Start with a command you already run</h2>
+        <p><a href="https://github.com/motus-os/work-ledger/releases/latest">Download Motus</a> for macOS, Linux, or Windows, or install it with Go.</p>
       </div>
 
       <div class="start-commands" aria-label="Install and first-use commands">
         <div>
-          <h3>Install and record</h3>
+          <h3>Install with Go</h3>
           <pre tabindex="0"><code>$ go install github.com/motus-os/work-ledger/cmd/motus@latest
-$ motus version
-$ motus wrap -- npm test</code></pre>
+$ motus version</code></pre>
         </div>
         <div>
-          <h3>Add and retrieve</h3>
-          <pre tabindex="0"><code>$ motus finding add --run run_... --file finding.txt
-$ motus finding list --query "repository history"
+          <h3>Use Motus</h3>
+          <pre tabindex="0"><code>$ motus wrap -- npm test
+$ motus finding add --run run_... --file finding.txt
+$ motus finding list --query "generated file"
 $ motus finding show finding_...</code></pre>
         </div>
       </div>
 
       <p class="documentation-link"><a href="https://github.com/motus-os/work-ledger#readme">Read the documentation</a></p>
-      <p class="trust-line">Motus runs on demand, uses SQLite, and needs no account or server. It does not upload the ledger or store raw command output.</p>
+      <p class="ledger-location">Motus writes <code>.motus/ledger.db</code> at the Git root by default. Add <code>.motus/</code> to <code>.gitignore</code>.</p>
+      <p class="trust-line">Share or restore the state directory. Put the search step in your agent or workflow instructions. No account or server is required.</p>
     </section>
   </main>
 
