@@ -288,6 +288,18 @@ dd {
   left: 1.5rem;
 }
 
+.ledger-sequence li:not(:last-child)::after {
+  position: absolute;
+  top: -0.27rem;
+  right: -0.05rem;
+  width: 0.45rem;
+  height: 0.45rem;
+  border-top: 1px solid var(--rule-strong);
+  border-right: 1px solid var(--rule-strong);
+  content: "";
+  transform: rotate(45deg);
+}
+
 .ledger-sequence span {
   display: block;
   margin-bottom: 0.55rem;
@@ -305,6 +317,13 @@ dd {
 
 .ledger-sequence code {
   color: var(--ink);
+}
+
+.workflow-note {
+  max-width: 46rem;
+  margin: 2.5rem 0 0;
+  color: var(--muted);
+  font-size: 0.95rem;
 }
 
 .section {
@@ -592,6 +611,11 @@ dd {
   .ledger-sequence li + li::before {
     top: 0;
     left: -0.83rem;
+  }
+
+  .ledger-sequence li::after,
+  .ledger-sequence li:not(:last-child)::after {
+    display: none;
   }
 }
 
