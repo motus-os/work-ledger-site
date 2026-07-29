@@ -96,17 +96,25 @@ dd {
 .skip-link {
   position: fixed;
   z-index: 100;
-  top: -5rem;
+  top: 1rem;
   left: 1rem;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
   padding: 0.7rem 1rem;
   background: var(--ink);
+  clip-path: inset(50%);
   color: #ffffff;
   font-weight: 700;
   text-decoration: none;
+  white-space: nowrap;
 }
 
 .skip-link:focus {
-  top: 1rem;
+  width: auto;
+  height: auto;
+  overflow: visible;
+  clip-path: none;
 }
 
 .site-header {
@@ -172,12 +180,11 @@ dd {
 }
 
 .hero {
-  min-height: 37rem;
-  padding-block: clamp(4.5rem, 8vw, 7rem);
+  padding-block: clamp(3.75rem, 5vw, 4.75rem);
 }
 
 .hero-copy {
-  max-width: 54rem;
+  max-width: 50rem;
 }
 
 .hero h1,
@@ -192,7 +199,7 @@ dd {
 .hero h1 {
   max-width: 12ch;
   margin-bottom: 1.65rem;
-  font-size: clamp(3.25rem, 6.2vw, 5.8rem);
+  font-size: clamp(3.25rem, 5.7vw, 5.1rem);
   font-weight: 780;
 }
 
@@ -239,91 +246,315 @@ dd {
   font-weight: 700;
 }
 
-.ledger-sequence {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  margin: clamp(4rem, 7vw, 6rem) 0 0;
-  padding: 0;
-  counter-reset: ledger-step;
-  list-style: none;
+.product-flow {
+  margin: clamp(2.25rem, 3.5vw, 3rem) 0 0;
 }
 
-.workflow .section-intro {
-  margin-bottom: 0;
-}
-
-.workflow .ledger-sequence {
-  margin-top: clamp(2.75rem, 5vw, 4rem);
-}
-
-.ledger-sequence li {
-  position: relative;
-  min-width: 0;
-  padding: 2rem 1.5rem 0 0;
-  border-top: 1px solid var(--rule-strong);
-  counter-increment: ledger-step;
-}
-
-.ledger-sequence li + li {
-  padding-left: 1.5rem;
-}
-
-.ledger-sequence li::before {
-  position: absolute;
-  top: -0.82rem;
-  left: 0;
-  width: 1.65rem;
-  height: 1.65rem;
-  border-radius: 50%;
-  background: var(--blue);
-  color: #ffffff;
-  content: counter(ledger-step);
-  font-size: 0.75rem;
-  font-weight: 750;
-  line-height: 1.65rem;
-  text-align: center;
-}
-
-.ledger-sequence li + li::before {
-  left: 1.5rem;
-}
-
-.ledger-sequence li:not(:last-child)::after {
-  position: absolute;
-  top: -0.27rem;
-  right: -0.05rem;
-  width: 0.45rem;
-  height: 0.45rem;
-  border-top: 1px solid var(--rule-strong);
-  border-right: 1px solid var(--rule-strong);
-  content: "";
-  transform: rotate(45deg);
-}
-
-.ledger-sequence span {
-  display: block;
-  margin-bottom: 0.55rem;
-  color: var(--muted);
-  font-size: 0.82rem;
-  font-weight: 650;
-}
-
-.ledger-sequence strong {
-  display: block;
-  color: var(--ink-soft);
-  font-size: 0.95rem;
-  font-weight: 650;
-}
-
-.ledger-sequence code {
+.product-flow figcaption {
+  margin-bottom: 1.1rem;
   color: var(--ink);
+  font-size: clamp(1.15rem, 2vw, 1.4rem);
+  font-weight: 720;
+}
+
+.workflow-story {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 4.2rem minmax(0, 1.08fr) 4.2rem minmax(0, 1fr);
+  align-items: start;
+  padding-block: 1.25rem 1.4rem;
+  border-block: 1px solid var(--rule);
+}
+
+.workflow-step {
+  min-width: 0;
+}
+
+.workflow-time {
+  margin-bottom: 0.65rem;
+  color: var(--muted);
+  font-size: 0.76rem;
+  font-weight: 740;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.workflow-step h2 {
+  margin: 0.95rem 0 0.35rem;
+  font-size: 1.02rem;
+  letter-spacing: -0.025em;
+  line-height: 1.3;
+}
+
+.workflow-step > p:last-child {
+  max-width: 28rem;
+  margin: 0;
+  color: var(--ink-soft);
+  font-size: 0.82rem;
+  line-height: 1.5;
+}
+
+.workflow-artifact {
+  position: relative;
+  height: 8.7rem;
+}
+
+.workflow-capture {
+  padding: 0.35rem 0.7rem 0 0;
+}
+
+.workflow-terminal {
+  display: flex;
+  width: 84%;
+  min-height: 5.4rem;
+  align-items: flex-start;
+  gap: 0.65rem;
+  padding: 1rem;
+  border: 1px solid var(--terminal-rule);
+  border-radius: 8px;
+  background: var(--terminal);
+  color: var(--terminal-text);
+}
+
+.workflow-terminal svg {
+  width: 1.3rem;
+  flex: none;
+  fill: none;
+  stroke: #8da8ff;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.65;
+}
+
+.workflow-terminal code {
+  min-width: 0;
+  overflow: hidden;
+  padding-top: 0.05rem;
+  color: var(--terminal-text);
+  font-size: 0.74rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .workflow-note {
-  max-width: 46rem;
-  margin: 2.5rem 0 0;
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  width: 74%;
+  min-height: 4.25rem;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.75rem 0.85rem;
+  border: 1px solid #c7d3f6;
+  border-radius: 7px;
+  background: var(--surface);
+  box-shadow: 0 4px 14px rgba(16, 18, 23, 0.08);
+}
+
+.workflow-note svg {
+  width: 1.35rem;
+  flex: none;
+  fill: none;
+  stroke: var(--blue);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.65;
+}
+
+.workflow-note span {
+  color: var(--ink);
+  font-size: 0.76rem;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.workflow-ledger {
+  padding: 0.85rem;
+  border: 1px solid #b9c8f5;
+  border-radius: 9px;
+  background: var(--surface);
+  box-shadow: 0 5px 18px rgba(16, 18, 23, 0.07);
+}
+
+.workflow-ledger::before {
+  position: absolute;
+  z-index: -1;
+  inset: 0.45rem -0.45rem -0.45rem 0.45rem;
+  border: 1px solid #d4dcf5;
+  border-radius: 9px;
+  background: var(--blue-pale);
+  content: "";
+}
+
+.workflow-ledger-head {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  margin-bottom: 0.7rem;
+}
+
+.workflow-ledger-head svg {
+  width: 1.45rem;
+  height: 1.45rem;
+  flex: none;
+}
+
+.workflow-ledger-head rect {
+  fill: var(--blue);
+}
+
+.workflow-ledger-head path {
+  fill: none;
+  stroke: #ffffff;
+  stroke-linecap: round;
+  stroke-width: 1.8;
+}
+
+.workflow-ledger-head strong {
+  color: var(--ink);
+  font-size: 0.8rem;
+}
+
+.workflow-ledger-records {
+  position: relative;
+  padding-left: 0.85rem;
+}
+
+.workflow-ledger-records::before {
+  position: absolute;
+  top: 0.2rem;
+  bottom: 0.2rem;
+  left: 0.15rem;
+  width: 2px;
+  background: var(--blue);
+  content: "";
+}
+
+.workflow-ledger-records div {
+  display: grid;
+  grid-template-columns: 4.6rem minmax(0, 1fr);
+  gap: 0.45rem;
+  align-items: baseline;
+}
+
+.workflow-ledger-records div + div {
+  margin-top: 0.45rem;
+}
+
+.workflow-ledger-records span {
+  color: var(--ink);
+  font-size: 0.69rem;
+  font-weight: 760;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.workflow-ledger-records small {
+  overflow: hidden;
   color: var(--muted);
-  font-size: 0.95rem;
+  font-size: 0.7rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.workflow-retrieval {
+  padding: 0.35rem 0 0 0.4rem;
+}
+
+.workflow-query {
+  display: flex;
+  width: 88%;
+  min-height: 3.15rem;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.7rem 0.85rem;
+  border: 1px solid var(--terminal-rule);
+  border-radius: 8px;
+  background: var(--terminal);
+}
+
+.workflow-query svg {
+  width: 1.2rem;
+  flex: none;
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.8;
+}
+
+.workflow-query-terminal {
+  stroke: #8da8ff;
+}
+
+.workflow-query-search {
+  margin-left: auto;
+  stroke: #b9c4d6;
+}
+
+.workflow-query code {
+  min-width: 0;
+  overflow: hidden;
+  color: var(--terminal-text);
+  font-size: 0.65rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.workflow-result-pair {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 82%;
+  padding: 0.75rem 0.85rem 0.75rem 1rem;
+  border: 1px solid #c7d3f6;
+  border-radius: 7px;
+  background: var(--blue-pale);
+}
+
+.workflow-result-pair::before {
+  position: absolute;
+  top: 0.65rem;
+  bottom: 0.65rem;
+  left: 0;
+  width: 2px;
+  background: var(--blue);
+  content: "";
+}
+
+.workflow-result-pair span {
+  display: block;
+  color: var(--ink);
+  font-size: 0.76rem;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+.workflow-result-pair span + span {
+  margin-top: 0.35rem;
+  padding-top: 0.35rem;
+  border-top: 1px solid #c7d3f6;
+}
+
+.workflow-arrow {
+  display: flex;
+  height: 8.7rem;
+  align-items: center;
+  padding-top: 1.8rem;
+}
+
+.workflow-arrow svg {
+  width: 100%;
+  height: 1.5rem;
+  overflow: visible;
+}
+
+.workflow-arrow path {
+  fill: none;
+  stroke: var(--blue);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.6;
+  vector-effect: non-scaling-stroke;
 }
 
 .section {
@@ -349,78 +580,293 @@ dd {
   font-size: 1.08rem;
 }
 
-.section-intro .output-note {
-  margin-top: 0.7rem;
-  font-size: 0.82rem;
-}
-
-.story-grid {
+.example-story {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: clamp(2.5rem, 6vw, 5rem);
-  border-top: 1px solid var(--rule-strong);
+  grid-template-columns: minmax(0, 1fr) 4.2rem minmax(0, 1.08fr) 4.2rem minmax(0, 1fr);
+  align-items: start;
+  padding-block: 1.25rem 1.4rem;
+  border-block: 1px solid var(--rule);
 }
 
-.story-part {
+.example-scene,
+.example-finding {
   min-width: 0;
-  padding-top: 1.5rem;
+  margin: 0;
 }
 
-.story-part h3 {
-  margin-bottom: 1rem;
+.example-label {
+  display: block;
+  margin-bottom: 0.65rem;
+  color: var(--muted);
+  font-size: 0.76rem;
+  font-weight: 740;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.example-artifact {
+  height: 11rem;
+}
+
+.example-local,
+.example-finding-card {
+  height: auto;
+  min-height: 11rem;
+}
+
+.example-artifact-head {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+.example-artifact-head svg {
+  width: 1.35rem;
+  flex: none;
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.7;
+}
+
+.example-artifact-head span {
+  font-size: 0.8rem;
+  font-weight: 720;
+}
+
+.example-artifact strong {
+  display: block;
+  margin-top: 1rem;
+  font-size: clamp(1.7rem, 2.6vw, 2.25rem);
+  line-height: 1.05;
+}
+
+.example-artifact small {
+  display: block;
+  margin-top: 0.55rem;
+  font-size: 0.75rem;
+  line-height: 1.45;
+}
+
+.example-local {
+  padding: 1.1rem;
+  border: 1px solid var(--terminal-rule);
+  border-radius: 9px;
+  background: var(--terminal);
+  color: var(--terminal-text);
+}
+
+.example-local .example-artifact-head svg {
+  stroke: #8da8ff;
+}
+
+.example-local strong {
+  color: #8da8ff;
+}
+
+.example-local small {
+  color: #b9c4d6;
+}
+
+.example-finding-card {
+  padding: 1.05rem 1.1rem;
+  border: 1px solid #b9c8f5;
+  border-radius: 9px;
+  background: var(--blue-pale);
+}
+
+.example-finding-card .example-artifact-head svg {
+  stroke: var(--blue);
+}
+
+.example-finding-card p {
+  margin: 1rem 0 0.7rem;
+  color: var(--ink);
+  font-size: 0.92rem;
+  font-weight: 680;
+  line-height: 1.45;
+}
+
+.example-finding-card cite {
+  color: var(--muted);
+  font-size: 0.73rem;
+  font-style: normal;
+}
+
+.example-remote {
+  position: relative;
+  height: auto;
+  min-height: 13.5rem;
+}
+
+.example-query {
+  display: flex;
+  width: 90%;
+  min-height: 3.1rem;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.7rem 0.8rem;
+  border: 1px solid var(--terminal-rule);
+  border-radius: 8px;
+  background: var(--terminal);
+}
+
+.example-query svg {
+  width: 1.05rem;
+  flex: none;
+  fill: none;
+  stroke: #8da8ff;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.8;
+}
+
+.example-query code {
+  min-width: 0;
+  overflow: hidden;
+  color: var(--terminal-text);
+  font-size: 0.62rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.example-retrieval-result {
+  width: 92%;
+  margin: 0.75rem 0 0 auto;
+  padding: 0.72rem 0.85rem;
+  border: 1px solid #b9c8f5;
+  border-radius: 9px;
+  background: var(--blue-pale);
+}
+
+.example-returned {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.example-returned svg {
+  width: 0.9rem;
+  flex: none;
+  fill: none;
+  stroke: var(--blue);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.7;
+}
+
+.example-returned span {
+  color: var(--ink);
+  font-size: 0.66rem;
+  font-weight: 720;
+}
+
+.example-check-step {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  align-items: center;
+  gap: 0.65rem;
+  width: 92%;
+  margin: 0.75rem 0 0 auto;
+}
+
+.example-check-step > span {
+  color: var(--muted);
+  font-size: 0.65rem;
+  font-weight: 680;
+  line-height: 1.35;
+}
+
+.example-repo-result {
+  padding: 0.65rem 0.75rem 0.7rem;
+  border: 1px solid var(--terminal-rule);
+  border-radius: 8px;
+  background: var(--terminal);
+}
+
+.example-repo-result small,
+.example-repo-result strong {
+  display: block;
+  margin: 0;
+}
+
+.example-repo-result small {
+  color: #b9c4d6;
+  font-size: 0.6rem;
+}
+
+.example-repo-result strong {
+  margin-top: 0.2rem;
+  color: #8da8ff;
   font-size: 1rem;
 }
 
-.story-part pre,
+.example-outcome {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  margin: 0.9rem 0 0;
+  color: var(--ink);
+  font-size: 0.8rem;
+  font-weight: 720;
+}
+
+.example-outcome svg {
+  width: 1rem;
+  flex: none;
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.8;
+}
+
+.example-warning svg {
+  stroke: var(--muted);
+}
+
+.example-success svg {
+  stroke: var(--blue);
+}
+
+.example-story-arrow {
+  display: flex;
+  height: 11rem;
+  align-items: center;
+  padding-top: 1.8rem;
+}
+
+.example-story-arrow svg {
+  width: 100%;
+  height: 1.5rem;
+  overflow: visible;
+}
+
+.example-story-arrow path {
+  fill: none;
+  stroke: var(--blue);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.6;
+  vector-effect: non-scaling-stroke;
+}
+
+.example-context {
+  max-width: 47rem;
+  margin: 1.8rem 0 0;
+  color: var(--ink-soft);
+  font-size: 1rem;
+}
+
 .start-commands pre {
   margin: 0;
   overflow-x: auto;
+  padding: 1.25rem 1.4rem;
   border: 1px solid var(--terminal-rule);
   border-radius: 8px;
   background: var(--terminal);
   color: var(--terminal-text);
   font-size: 0.82rem;
   line-height: 1.75;
-}
-
-.story-part pre {
-  min-height: 14.2rem;
-  padding: 1.35rem;
-}
-
-.authored-note {
-  margin-top: 1.3rem;
-  padding-left: 1rem;
-  border-left: 2px solid var(--blue);
-}
-
-.authored-note span {
-  display: block;
-  margin-bottom: 0.35rem;
-  color: var(--muted);
-  font-size: 0.76rem;
-  font-weight: 700;
-}
-
-.authored-note p {
-  margin-bottom: 0;
-  color: var(--ink-soft);
-  font-size: 0.94rem;
-}
-
-.example-context {
-  max-width: 51rem;
-  margin: clamp(2.5rem, 5vw, 4rem) 0 0;
-  padding-top: 1.5rem;
-  border-top: 1px solid var(--rule);
-  color: var(--ink-soft);
-  font-size: 1rem;
-}
-
-.state-note {
-  margin-top: 1.4rem;
-  color: var(--ink-soft) !important;
-  font-size: 0.94rem !important;
 }
 
 .section-intro code,
@@ -437,6 +883,19 @@ dd {
   font-weight: 680;
 }
 
+.ledger-location {
+  margin: 1rem 0 0;
+  color: var(--ink-soft);
+  font-size: 0.9rem;
+  overflow-wrap: anywhere;
+}
+
+.ledger-location code {
+  padding: 0.08em 0.32em;
+  border-radius: 4px;
+  background: var(--blue-pale);
+}
+
 .start-commands {
   min-width: 0;
   display: grid;
@@ -447,11 +906,6 @@ dd {
 .start-commands h3 {
   margin-bottom: 1rem;
   font-size: 1rem;
-}
-
-.start-commands pre {
-  margin: 0;
-  padding: 1.25rem 1.4rem;
 }
 
 @media (max-width: 1100px) {
@@ -489,6 +943,7 @@ dd {
 
 .footer-inner nav {
   display: flex;
+  flex-wrap: wrap;
   gap: 1.4rem;
 }
 
@@ -575,47 +1030,99 @@ dd {
   color: var(--muted);
 }
 
-@media (max-width: 1000px) {
-  .story-grid {
-    grid-template-columns: 1fr;
+@media (min-width: 1001px) and (max-height: 950px) {
+  .hero {
+    padding-block: 2.25rem;
   }
 
-  .story-part pre {
-    min-height: 0;
+  .hero h1 {
+    margin-bottom: 1.25rem;
+    font-size: clamp(3.25rem, 5vw, 4.5rem);
+  }
+
+  .product-flow {
+    margin-top: 1.5rem;
   }
 }
 
-@media (max-width: 900px) {
-  .hero {
-    min-height: 0;
+@media (max-width: 1000px) {
+  .workflow-story,
+  .example-story {
+    grid-template-columns: 1fr;
   }
 
-  .ledger-sequence {
-    max-width: 44rem;
-    display: block;
-    margin-left: 0.82rem;
-    border-left: 1px solid var(--rule-strong);
+  .example-scene,
+  .example-finding {
+    display: grid;
+    grid-template-columns: minmax(14rem, 0.8fr) minmax(0, 1fr);
+    column-gap: 2rem;
+    align-items: center;
   }
 
-  .ledger-sequence li,
-  .ledger-sequence li + li {
-    padding: 0 0 2.25rem 2rem;
-    border-top: 0;
+  .example-label {
+    grid-column: 1 / -1;
   }
 
-  .ledger-sequence li:last-child {
-    padding-bottom: 0;
+  .example-artifact {
+    grid-row: 2;
   }
 
-  .ledger-sequence li::before,
-  .ledger-sequence li + li::before {
-    top: 0;
-    left: -0.83rem;
+  .example-outcome {
+    grid-column: 2;
+    grid-row: 2;
+    align-self: center;
   }
 
-  .ledger-sequence li::after,
-  .ledger-sequence li:not(:last-child)::after {
-    display: none;
+  .workflow-step {
+    display: grid;
+    grid-template-columns: minmax(14rem, 0.8fr) minmax(0, 1fr);
+    column-gap: 2rem;
+    align-items: center;
+  }
+
+  .workflow-time {
+    grid-column: 1 / -1;
+  }
+
+  .workflow-artifact {
+    grid-row: 2 / 4;
+  }
+
+  .workflow-step h2 {
+    align-self: end;
+    margin-top: 0;
+  }
+
+  .workflow-step > p:last-child {
+    align-self: start;
+  }
+
+  .workflow-arrow {
+    width: 1.5rem;
+    height: 3.5rem;
+    margin-inline: calc(min(14rem, 40%) / 2);
+    padding: 0;
+    justify-content: center;
+  }
+
+  .workflow-arrow svg {
+    width: 1.5rem;
+    height: 3.5rem;
+    transform: rotate(90deg);
+  }
+
+  .example-story-arrow {
+    width: 1.5rem;
+    height: 3.5rem;
+    margin-inline: calc(min(14rem, 40%) / 2);
+    padding: 0;
+    justify-content: center;
+  }
+
+  .example-story-arrow svg {
+    width: 1.5rem;
+    height: 3.5rem;
+    transform: rotate(90deg);
   }
 }
 
@@ -627,6 +1134,8 @@ dd {
   .header-inner {
     min-height: 4.25rem;
     align-items: center;
+    flex-wrap: wrap;
+    padding-block: 0.6rem;
   }
 
   .brand span {
@@ -643,11 +1152,15 @@ dd {
   }
 
   .hero {
-    padding-block: 4.25rem 5rem;
+    padding-block: 3rem 4rem;
+  }
+
+  .product-flow {
+    margin-top: 2.5rem;
   }
 
   .hero h1 {
-    font-size: clamp(2.9rem, 14vw, 4rem);
+    font-size: clamp(2.65rem, 11.5vw, 3.3rem);
   }
 
   .section {
@@ -662,7 +1175,6 @@ dd {
     font-size: clamp(2.25rem, 11vw, 3.2rem);
   }
 
-  .story-part pre,
   .start-commands pre {
     white-space: pre-wrap;
     overflow-wrap: anywhere;
@@ -676,20 +1188,77 @@ dd {
     padding-block: 1.7rem;
   }
 
+  .footer-inner nav {
+    width: 100%;
+  }
+
   .page,
   .not-found {
     min-height: 0;
   }
 }
 
+@media (max-width: 560px) {
+  .workflow-story {
+    padding-block: 1rem 1.25rem;
+  }
+
+  .workflow-step {
+    display: block;
+  }
+
+  .workflow-artifact,
+  .example-artifact {
+    max-width: 22rem;
+  }
+
+  .workflow-ledger::before {
+    inset: 0.25rem 0 0 0.25rem;
+  }
+
+  .workflow-step h2 {
+    margin-top: 0.9rem;
+  }
+
+  .workflow-arrow {
+    margin-inline: auto;
+  }
+
+  .example-scene,
+  .example-finding {
+    display: block;
+  }
+
+  .example-check-step {
+    grid-template-columns: 1fr;
+    width: 100%;
+  }
+
+  .example-repo-result {
+    width: 100%;
+  }
+
+  .example-outcome {
+    margin-top: 0.9rem;
+  }
+
+  .example-story-arrow {
+    margin-inline: auto;
+  }
+}
+
 @media (max-width: 360px) {
+  .hero h1,
+  .section-intro h2 {
+    overflow-wrap: anywhere;
+  }
+
   .header-inner {
     gap: 0.5rem;
   }
 
   .brand {
     gap: 0.5rem;
-    white-space: nowrap;
   }
 
   .brand-mark {
