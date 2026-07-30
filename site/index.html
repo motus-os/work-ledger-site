@@ -3,15 +3,15 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Motus Work Ledger | Reusable context for later work</title>
-  <meta name="description" content="Motus gives developers and coding agents a local, searchable record of command runs and the context tied to them.">
+  <title>Motus Work Ledger | Keep what a command run taught you</title>
+  <meta name="description" content="Motus links selected command-run facts to findings you write, then lets you search both later in one local ledger.">
   <link rel="canonical" href="https://www.motussupra.com/">
   <meta property="og:type" content="website">
   <meta property="og:title" content="Motus Work Ledger">
-  <meta property="og:description" content="A local, searchable record of command runs and the context tied to them.">
+  <meta property="og:description" content="Selected run facts and authored findings, connected in one local ledger.">
   <meta property="og:url" content="https://www.motussupra.com/">
   <meta property="og:image" content="https://www.motussupra.com/assets/og-image.png">
-  <meta property="og:image:alt" content="Motus Work Ledger. Reusable context for later developer and agent work.">
+  <meta property="og:image:alt" content="Motus Work Ledger. Keep what a command run taught you.">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="theme-color" content="#f7f8fa">
   <link rel="icon" href="./assets/favicon.svg" type="image/svg+xml">
@@ -31,7 +31,7 @@
         <span>Motus Work Ledger</span>
       </a>
       <nav class="site-nav" aria-label="Primary navigation">
-        <a href="#workflow">Workflow</a>
+        <a class="nav-workflow" href="#workflow">Workflow</a>
         <a href="#example">Example</a>
         <a href="#install">Install</a>
         <a href="https://github.com/motus-os/work-ledger">GitHub</a>
@@ -42,8 +42,9 @@
   <main id="main">
     <section class="hero shell" aria-labelledby="hero-title">
       <div class="hero-copy">
-        <h1 id="hero-title">Record the context your next agent will need.</h1>
-        <p class="hero-lede">Motus gives developers and coding agents a local, searchable record of command runs and the context tied to them.</p>
+        <h1 id="hero-title">Keep what a command run taught you.</h1>
+        <p class="hero-lede">Motus records selected run facts and links them to a finding you write. Search later for the finding and recorded run ID.</p>
+        <p class="hero-boundary">Local CLI. No account or server. No arguments or raw output stored.</p>
       </div>
 
       <figure class="product-flow" id="workflow" aria-labelledby="workflow-title">
@@ -64,11 +65,11 @@
                   <path d="M5 3.5h10.5L19 7v13.5H5z"></path>
                   <path d="M15.5 3.5V7H19M8.5 11h7M8.5 14.5h5M8.5 18h3"></path>
                 </svg>
-                <span>Context added</span>
+                <span>Finding added</span>
               </div>
             </div>
             <h2 id="work-now-title">Run the command through Motus</h2>
-            <p>Motus records the outcome and, when available, the repository and commit. A developer or agent adds the context worth keeping.</p>
+            <p>Motus records repository, commit, and outcome when available. You add a finding when the run taught you something worth reusing.</p>
           </section>
 
           <span class="workflow-arrow" aria-hidden="true">
@@ -95,7 +96,7 @@
                 </div>
                 <div>
                   <span>Finding</span>
-                  <small>context for later work</small>
+                  <small>what the run taught you</small>
                 </div>
               </div>
             </div>
@@ -126,11 +127,11 @@
               </div>
               <div class="workflow-result-pair">
                 <span>Finding</span>
-                <span>Run ID</span>
+                <span>Recorded run ID</span>
               </div>
             </div>
             <h2 id="work-later-title">Search before similar work</h2>
-            <p>A developer or agent searches the ledger. Motus returns the finding and run ID before the next action.</p>
+            <p>Search returns the finding and recorded run ID before the next action.</p>
           </section>
         </div>
       </figure>
@@ -143,8 +144,8 @@
 
     <section class="section shell" id="example" aria-labelledby="example-title">
       <div class="section-intro">
-        <h2 id="example-title">The next agent did not repeat the mistake.</h2>
-        <p>While building Motus, an agent treated the 92 commits in a shallow clone as the repository's full history. Motus kept the correction.</p>
+        <h2 id="example-title">The earlier finding changed the next check.</h2>
+        <p>On July 27, 2026, <code>git rev-list --count HEAD</code> returned 92 in a shallow clone of the archived <a href="https://github.com/motus-os/motus">motus-os/motus</a> <code>main</code> branch. The finding required a GitHub check before calling that count complete.</p>
       </div>
 
       <div class="example-story" aria-label="A later agent avoids repeating an unsupported repository-history conclusion">
@@ -187,7 +188,7 @@
               <span>Motus</span>
             </div>
             <p>Check whether the clone is shallow. Compare the same branch with GitHub before drawing conclusions.</p>
-            <cite>Linked to the original run</cite>
+            <cite>Linked to the origin run</cite>
           </div>
         </blockquote>
 
@@ -214,7 +215,7 @@
                   <path d="M5 3.5h10.5L19 7v13.5H5z"></path>
                   <path d="M15.5 3.5V7H19M8.5 11h7M8.5 14.5h5"></path>
                 </svg>
-                <span>Finding + source-run ID retrieved</span>
+                <span>Finding + origin run ID retrieved</span>
               </div>
             </div>
             <div class="example-check-step">
@@ -235,13 +236,13 @@
         </article>
       </div>
 
-      <p class="example-context">The next agent found the correction and its source run before reporting, then checked the current repository. Keep the standing rule in project documentation; Motus keeps the finding, origin run, and resolving run.</p>
+      <p class="example-context">A later review retrieved the finding and origin run ID, then paginated GitHub's <code>main</code> commits API: 512. Put standing rules in documentation; use Motus when the run reference matters.</p>
     </section>
 
     <section class="section shell" id="install" aria-labelledby="install-title">
       <div class="section-intro">
         <h2 id="install-title">Start with a command you already run</h2>
-        <p><a href="https://github.com/motus-os/work-ledger/releases/latest">Download Motus</a> for macOS, Linux, or Windows, or install it with Go.</p>
+        <p><a href="https://github.com/motus-os/work-ledger/releases/latest">Download Motus</a> for macOS, Linux, or Windows. Source installation requires Go 1.26.5 or newer.</p>
       </div>
 
       <div class="start-commands" aria-label="Install and first-use commands">
@@ -253,6 +254,7 @@ $ motus version</code></pre>
         <div>
           <h3>Use Motus</h3>
           <pre tabindex="0"><code>$ motus wrap -- npm test
+$ # Create finding.txt with one concise finding.
 $ motus finding add --run run_... --file finding.txt
 $ motus finding list --query "generated file"
 $ motus finding show finding_...</code></pre>
@@ -261,7 +263,7 @@ $ motus finding show finding_...</code></pre>
 
       <p class="documentation-link"><a href="https://github.com/motus-os/work-ledger#readme">Read the documentation</a></p>
       <p class="ledger-location">Motus writes <code>.motus/ledger.db</code> at the Git root by default. Add <code>.motus/</code> to <code>.gitignore</code>.</p>
-      <p class="trust-line">Share or restore the state directory. Put the search step in your agent or workflow instructions. No account or server is required.</p>
+      <p class="trust-line">State is local unless shared. Add search to workflow instructions. No account or server.</p>
     </section>
   </main>
 

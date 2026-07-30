@@ -8,8 +8,8 @@
   </g>
   <text x="168" y="119" fill="#101217" font-family="Arial, Helvetica, sans-serif" font-size="30" font-weight="700">Motus Work Ledger</text>
   <line x1="72" y1="190" x2="1128" y2="190" stroke="#dce1e8" stroke-width="2"/>
-  <text x="72" y="302" fill="#101217" font-family="Arial, Helvetica, sans-serif" font-size="72" font-weight="700">Record the context your</text>
-  <text x="72" y="392" fill="#101217" font-family="Arial, Helvetica, sans-serif" font-size="72" font-weight="700">next agent will need.</text>
-  <text x="72" y="474" fill="#606978" font-family="Arial, Helvetica, sans-serif" font-size="29">Local work ledger for developers and coding agents.</text>
+  <text x="72" y="302" fill="#101217" font-family="Arial, Helvetica, sans-serif" font-size="72" font-weight="700">Keep what a command run</text>
+  <text x="72" y="392" fill="#101217" font-family="Arial, Helvetica, sans-serif" font-size="72" font-weight="700">taught you.</text>
+  <text x="72" y="474" fill="#606978" font-family="Arial, Helvetica, sans-serif" font-size="29">Selected run facts. Authored findings. One local ledger.</text>
   <rect x="72" y="535" width="1056" height="3" fill="#2456e6"/>
 </svg>

@@ -46,7 +46,7 @@
 
       <section aria-labelledby="control-title">
         <h2 id="control-title">Your state directory</h2>
-        <p>SQLite may create <code>ledger.db-wal</code> and <code>ledger.db-shm</code> beside <code>ledger.db</code>. Add <code>.motus/</code> to <code>.gitignore</code> when the default state should remain outside version control. Anyone who can read the state directory or its backups can read the findings stored there.</p>
+        <p>SQLite may temporarily create <code>ledger.db-journal</code> beside <code>ledger.db</code> during a write. Add <code>.motus/</code> to <code>.gitignore</code> when the default state should remain outside version control. Anyone who can read the state directory or its backups can read the findings stored there.</p>
         <p>If you place the state directory in shared or synchronized storage, that system's privacy and retention rules apply. To remove Motus state, stop processes using it and delete the entire state directory and any backups you control.</p>
       </section>
 
