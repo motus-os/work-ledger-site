@@ -10,6 +10,12 @@ const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const siteRoot = path.join(root, "site");
 const productionURL = new URL("https://www.motussupra.com/");
 const pages = ["/", "/security.html", "/privacy.html", "/404.html"];
+const accessibleExampleFacts = [
+  "motus finding list --query shallow",
+  "Finding + origin run ID retrieved",
+  "Then the agent checks GitHub",
+  "512 commits",
+];
 const chromiumProfiles = [
   { name: "280-light", viewport: { width: 280, height: 700 } },
   { name: "320-light", viewport: { width: 320, height: 700 } },
@@ -129,6 +135,53 @@ function captureName(browserName, route, profileName) {
   return `${routeName(route)}-${browserName}-${profileName}.png`;
 }
 
+async function missingAccessibleExampleFacts(page) {
+  const snapshot = await page.locator('[data-example-stage="next"]').ariaSnapshot();
+  return accessibleExampleFacts.filter((phrase) => !snapshot.includes(phrase));
+}
+
+async function assertAccessibleExampleFacts(page) {
+  const missing = await missingAccessibleExampleFacts(page);
+  if (missing.length > 0) {
+    throw new Error(`accessible example omits ${missing.map((phrase) => JSON.stringify(phrase)).join(", ")}`);
+  }
+}
+
+function measureArtifactOverflow(elements) {
+  return elements.map((element) => {
+    const parent = element.getBoundingClientRect();
+    const informative = element.getAttribute("aria-hidden") !== "true";
+    const nodes = informative ? [element, ...element.querySelectorAll("*")] : [...element.children];
+    const bounds = nodes.flatMap((node) => {
+      const rectangles = [node.getBoundingClientRect()];
+      if (informative && [...node.childNodes].some((child) =>
+        child.nodeType === Node.TEXT_NODE && child.textContent.trim())) {
+        const range = document.createRange();
+        range.selectNodeContents(node);
+        rectangles.push(range.getBoundingClientRect());
+      }
+      return rectangles;
+    }).filter((bounds) => bounds.width > 0 && bounds.height > 0);
+    const clipped = informative
+      ? nodes.filter((node) => {
+          if (!(node instanceof HTMLElement)) return false;
+          const style = getComputedStyle(node);
+          const clipsX = style.overflowX === "hidden" || style.overflowX === "clip";
+          const clipsY = style.overflowY === "hidden" || style.overflowY === "clip";
+          return (clipsX && node.scrollWidth - node.clientWidth > 1)
+            || (clipsY && node.scrollHeight - node.clientHeight > 1);
+        }).map((node) => node.className || node.tagName.toLowerCase())
+      : [];
+    return {
+      left: Math.max(0, parent.left - Math.min(parent.left, ...bounds.map((bounds) => bounds.left))),
+      right: Math.max(0, Math.max(parent.right, ...bounds.map((bounds) => bounds.right)) - parent.right),
+      top: Math.max(0, parent.top - Math.min(parent.top, ...bounds.map((bounds) => bounds.top))),
+      bottom: Math.max(0, Math.max(parent.bottom, ...bounds.map((bounds) => bounds.bottom)) - parent.bottom),
+      clipped,
+    };
+  });
+}
+
 async function inspectPage(browserName, browser, profile, route) {
   const context = await browser.newContext({
     viewport: profile.viewport,
@@ -165,6 +218,16 @@ async function inspectPage(browserName, browser, profile, route) {
     errors.push(`horizontal overflow: ${JSON.stringify(overflow)}`);
   }
 
+  if (profile.viewport.width <= 680) {
+    const installVisible = await page.locator('.site-nav a[href$="#install"]').isVisible();
+    const githubVisible = await page.locator('.site-nav a[href^="https://github.com/"]').isVisible();
+    if (!installVisible || !githubVisible) errors.push("mobile navigation must show Install and GitHub");
+    if (route !== "/") {
+      const exampleVisible = await page.locator('.site-nav a[href$="#example"]').isVisible();
+      if (!exampleVisible) errors.push("mobile secondary navigation must show Example");
+    }
+  }
+
   if (route === "/") {
     const codeOverflow = await page.locator("pre").evaluateAll((elements) =>
       elements.map((element) => element.scrollWidth - element.clientWidth),
@@ -183,12 +246,6 @@ async function inspectPage(browserName, browser, profile, route) {
       errors.push(`button focus indicator is not the reviewed high-contrast outline: ${JSON.stringify(focusStyle)}`);
     }
 
-    if (profile.viewport.width <= 680) {
-      const installVisible = await page.locator('.site-nav a[href="#install"]').isVisible();
-      const githubVisible = await page.locator('.site-nav a[href^="https://github.com/"]').isVisible();
-      if (!installVisible || !githubVisible) errors.push("mobile navigation must show Install and GitHub");
-    }
-
     const flowItems = await page.locator(".workflow-step").evaluateAll((elements) =>
       elements.map((element) => {
         const bounds = element.getBoundingClientRect();
@@ -196,20 +253,11 @@ async function inspectPage(browserName, browser, profile, route) {
       }),
     );
     if (flowItems.length !== 3) errors.push(`workflow has ${flowItems.length} stages instead of 3`);
-    const artifactOverflow = await page.locator(".workflow-artifact, .example-artifact").evaluateAll((elements) =>
-      elements.map((element) => {
-        const parent = element.getBoundingClientRect();
-        const children = [...element.children].map((child) => child.getBoundingClientRect());
-        return {
-          left: Math.max(0, parent.left - Math.min(parent.left, ...children.map((child) => child.left))),
-          right: Math.max(0, Math.max(parent.right, ...children.map((child) => child.right)) - parent.right),
-          top: Math.max(0, parent.top - Math.min(parent.top, ...children.map((child) => child.top))),
-          bottom: Math.max(0, Math.max(parent.bottom, ...children.map((child) => child.bottom)) - parent.bottom),
-        };
-      }),
-    );
+    const artifactOverflow = await page.locator(".workflow-artifact, .example-artifact")
+      .evaluateAll(measureArtifactOverflow);
     for (const [index, overflowAmount] of artifactOverflow.entries()) {
-      if (Object.values(overflowAmount).some((amount) => amount > 1)) {
+      if (["left", "right", "top", "bottom"].some((side) => overflowAmount[side] > 1)
+        || overflowAmount.clipped.length > 0) {
         errors.push(`visual artifact ${index + 1} clips content: ${JSON.stringify(overflowAmount)}`);
       }
     }
@@ -252,16 +300,9 @@ async function inspectPage(browserName, browser, profile, route) {
       }),
     );
     if (exampleItems.length !== 3) errors.push(`example has ${exampleItems.length} stages instead of 3`);
-    const exampleAccessibility = await page.locator('[data-example-stage="next"]').ariaSnapshot();
-    for (const phrase of [
-      "motus finding list --query shallow",
-      "Finding + source-run ID retrieved",
-      "Then the agent checks GitHub",
-      "512 commits",
-    ]) {
-      if (!exampleAccessibility.includes(phrase)) {
-        errors.push(`accessible example omits ${JSON.stringify(phrase)}`);
-      }
+    const missingFacts = await missingAccessibleExampleFacts(page);
+    for (const phrase of missingFacts) {
+      errors.push(`accessible example omits ${JSON.stringify(phrase)}`);
     }
     if (profile.viewport.width > 1000) {
       const topSpread = Math.max(...exampleItems.map((item) => item.top))
@@ -342,32 +383,54 @@ async function inspectTextZoom(browser) {
     await page.evaluate(() => {
       document.documentElement.style.fontSize = "200%";
     });
-    const result = await page.evaluate(() => {
-      const artifacts = [...document.querySelectorAll(".workflow-artifact, .example-artifact")];
-      return {
-        pageOverflow: document.documentElement.scrollWidth - document.documentElement.clientWidth,
-        artifactOverflow: artifacts.map((element) => {
-          const parent = element.getBoundingClientRect();
-          const children = [...element.children].map((child) => child.getBoundingClientRect());
-          return {
-            left: Math.max(0, parent.left - Math.min(parent.left, ...children.map((child) => child.left))),
-            right: Math.max(0, Math.max(parent.right, ...children.map((child) => child.right)) - parent.right),
-            top: Math.max(0, parent.top - Math.min(parent.top, ...children.map((child) => child.top))),
-            bottom: Math.max(0, Math.max(parent.bottom, ...children.map((child) => child.bottom)) - parent.bottom),
-          };
-        }),
-      };
-    });
+    const pageOverflow = await page.evaluate(() =>
+      document.documentElement.scrollWidth - document.documentElement.clientWidth);
+    const artifactOverflow = await page.locator(".workflow-artifact, .example-artifact")
+      .evaluateAll(measureArtifactOverflow);
     await context.close();
-    if (result.pageOverflow > 1) {
-      throw new Error(`200% text check overflowed the page by ${result.pageOverflow}px at ${viewport.width}px`);
+    if (pageOverflow > 1) {
+      throw new Error(`200% text check overflowed the page by ${pageOverflow}px at ${viewport.width}px`);
     }
-    for (const [index, overflowAmount] of result.artifactOverflow.entries()) {
-      if (Object.values(overflowAmount).some((amount) => amount > 1)) {
+    for (const [index, overflowAmount] of artifactOverflow.entries()) {
+      if (["left", "right", "top", "bottom"].some((side) => overflowAmount[side] > 1)
+        || overflowAmount.clipped.length > 0) {
         throw new Error(`200% text check clipped visual artifact ${index + 1} at ${viewport.width}px: ${JSON.stringify(overflowAmount)}`);
       }
     }
   }
+}
+
+async function inspectExampleAccessibilityRegression(browser) {
+  const context = await browser.newContext({ viewport: { width: 1280, height: 900 } });
+  await routeProductionSite(context);
+  const page = await context.newPage();
+  await page.goto(baseURL, { waitUntil: "networkidle" });
+  await assertAccessibleExampleFacts(page);
+
+  await page.locator(".example-remote").evaluate((element) => {
+    element.setAttribute("aria-hidden", "true");
+  });
+  const hiddenMissing = await missingAccessibleExampleFacts(page);
+  if (hiddenMissing.length !== accessibleExampleFacts.length) {
+    throw new Error(`aria-hidden negative control left example facts exposed: ${JSON.stringify(
+      accessibleExampleFacts.filter((phrase) => !hiddenMissing.includes(phrase)),
+    )}`);
+  }
+  let negativeControlFailed = false;
+  try {
+    await assertAccessibleExampleFacts(page);
+  } catch {
+    negativeControlFailed = true;
+  }
+  if (!negativeControlFailed) {
+    throw new Error("accessibility regression assertion passed after the informative example container was aria-hidden");
+  }
+
+  await page.locator(".example-remote").evaluate((element) => {
+    element.removeAttribute("aria-hidden");
+  });
+  await assertAccessibleExampleFacts(page);
+  await context.close();
 }
 
 async function inspectNavigationAndFallbacks(browser) {
@@ -427,7 +490,7 @@ async function inspectNavigationAndFallbacks(browser) {
     if (fallbackPage.url() !== productionURL.href) {
       errors.push(`custom 404 home resolved to ${fallbackPage.url()}`);
     }
-    if ((await fallbackPage.locator("h1").innerText()) !== "Record the context your next agent will need.") {
+    if ((await fallbackPage.locator("h1").innerText()) !== "Keep what a command run taught you.") {
       errors.push("custom 404 home link did not load the site index");
     }
     await fallbackPage.close();
@@ -452,10 +515,11 @@ try {
     if (spec.name === "chromium") {
       await inspectTextSpacing(browser);
       await inspectTextZoom(browser);
+      await inspectExampleAccessibilityRegression(browser);
       await inspectNavigationAndFallbacks(browser);
     }
   }
-  console.log(`PASS browser and accessibility checks (${renderCount} renders across ${browserSpecs.length} browser engine(s), 2 text-spacing views, 2 text-zoom views, 2 custom 404 fallbacks)`);
+  console.log(`PASS browser and accessibility checks (${renderCount} renders across ${browserSpecs.length} browser engine(s), 2 text-spacing views, 2 text-zoom views, 1 accessibility regression control, 2 custom 404 fallbacks)`);
 } finally {
   await Promise.all(browsers.map((browser) => browser.close()));
   if (server.listening) await new Promise((resolve) => server.close(resolve));

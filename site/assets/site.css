@@ -211,6 +211,13 @@ dd {
   line-height: 1.65;
 }
 
+.hero-boundary {
+  margin: 1rem 0 0;
+  color: var(--muted);
+  font-size: 0.9rem;
+  font-weight: 620;
+}
+
 .hero-actions {
   display: flex;
   flex-wrap: wrap;
@@ -295,7 +302,7 @@ dd {
 
 .workflow-artifact {
   position: relative;
-  height: 8.7rem;
+  min-height: 9rem;
 }
 
 .workflow-capture {
@@ -458,6 +465,8 @@ dd {
 }
 
 .workflow-retrieval {
+  display: flex;
+  flex-direction: column;
   padding: 0.35rem 0 0 0.4rem;
 }
 
@@ -493,18 +502,18 @@ dd {
 
 .workflow-query code {
   min-width: 0;
-  overflow: hidden;
+  overflow: visible;
   color: var(--terminal-text);
   font-size: 0.65rem;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+  white-space: normal;
 }
 
 .workflow-result-pair {
-  position: absolute;
-  right: 0;
-  bottom: 0;
+  position: relative;
   width: 82%;
+  margin: 0.75rem 0 0 auto;
   padding: 0.75rem 0.85rem 0.75rem 1rem;
   border: 1px solid #c7d3f6;
   border-radius: 7px;
@@ -723,11 +732,12 @@ dd {
 
 .example-query code {
   min-width: 0;
-  overflow: hidden;
+  overflow: visible;
   color: var(--terminal-text);
   font-size: 0.62rem;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+  white-space: normal;
 }
 
 .example-retrieval-result {
@@ -1147,7 +1157,7 @@ dd {
     font-size: 0.77rem;
   }
 
-  .site-nav a:nth-child(-n + 2) {
+  .site-nav .nav-workflow {
     display: none;
   }
 
