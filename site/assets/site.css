@@ -89,7 +89,7 @@ dd {
 }
 
 .shell {
-  width: min(calc(100% - 3rem), 73.75rem);
+  width: min(calc(100% - 3rem), 78rem);
   margin-inline: auto;
 }
 
@@ -118,7 +118,7 @@ dd {
 }
 
 .site-header {
-  background: rgba(247, 248, 250, 0.96);
+  background: rgba(255, 255, 255, 0.94);
   border-bottom: 1px solid var(--rule);
 }
 
@@ -131,6 +131,7 @@ dd {
 }
 
 .brand {
+  min-height: 3rem;
   display: inline-flex;
   align-items: center;
   gap: 0.7rem;
@@ -171,6 +172,9 @@ dd {
 }
 
 .site-nav a {
+  min-height: 3rem;
+  display: inline-flex;
+  align-items: center;
   color: var(--muted);
   text-decoration: none;
 }
@@ -180,11 +184,12 @@ dd {
 }
 
 .hero {
-  padding-block: clamp(3.75rem, 5vw, 4.75rem);
+  padding-block: clamp(4.5rem, 6vw, 6rem);
 }
 
 .hero-copy {
-  max-width: 50rem;
+  max-width: 64rem;
+  text-align: left;
 }
 
 .hero h1,
@@ -197,25 +202,32 @@ dd {
 }
 
 .hero h1 {
-  max-width: 12ch;
-  margin-bottom: 1.65rem;
-  font-size: clamp(3.25rem, 5.7vw, 5.1rem);
+  max-width: 15ch;
+  margin: 0 0 1.75rem;
+  font-size: clamp(3.5rem, 6vw, 5.5rem);
   font-weight: 780;
 }
 
-.hero-lede {
-  max-width: 40rem;
-  margin-bottom: 0;
-  color: var(--ink-soft);
-  font-size: clamp(1.05rem, 1.5vw, 1.2rem);
-  line-height: 1.65;
+.hero h1 span {
+  display: block;
 }
 
-.hero-boundary {
-  margin: 1rem 0 0;
-  color: var(--muted);
-  font-size: 0.9rem;
-  font-weight: 620;
+.hero-kicker,
+.section-kicker {
+  margin-bottom: 1.15rem;
+  color: var(--blue);
+  font-size: 0.78rem;
+  font-weight: 760;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+}
+
+.hero-lede {
+  max-width: 49rem;
+  margin: 0;
+  color: var(--ink-soft);
+  font-size: clamp(1.1rem, 1.55vw, 1.3rem);
+  line-height: 1.6;
 }
 
 .hero-actions {
@@ -223,7 +235,8 @@ dd {
   flex-wrap: wrap;
   align-items: center;
   gap: 1.15rem;
-  margin-top: 2rem;
+  justify-content: flex-start;
+  margin-top: 2.1rem;
 }
 
 .button {
@@ -248,17 +261,25 @@ dd {
 }
 
 .text-link {
+  min-height: 3rem;
+  display: inline-flex;
+  align-items: center;
   color: var(--ink);
   font-size: 0.92rem;
   font-weight: 700;
 }
 
 .product-flow {
-  margin: clamp(2.25rem, 3.5vw, 3rem) 0 0;
+  margin: clamp(4rem, 5vw, 4.75rem) 0 0;
+  padding: clamp(2rem, 2.5vw, 2.75rem);
+  border: 1px solid var(--rule);
+  border-radius: 18px;
+  background: var(--surface);
+  box-shadow: 0 18px 55px rgba(16, 18, 23, 0.06);
 }
 
 .product-flow figcaption {
-  margin-bottom: 1.1rem;
+  margin-bottom: 1.35rem;
   color: var(--ink);
   font-size: clamp(1.15rem, 2vw, 1.4rem);
   font-weight: 720;
@@ -268,8 +289,8 @@ dd {
   display: grid;
   grid-template-columns: minmax(0, 1fr) 4.2rem minmax(0, 1.08fr) 4.2rem minmax(0, 1fr);
   align-items: start;
-  padding-block: 1.25rem 1.4rem;
-  border-block: 1px solid var(--rule);
+  padding-block: 1.4rem 0;
+  border-top: 1px solid var(--rule);
 }
 
 .workflow-step {
@@ -287,7 +308,7 @@ dd {
 
 .workflow-step h2 {
   margin: 0.95rem 0 0.35rem;
-  font-size: 1.02rem;
+  font-size: 1.08rem;
   letter-spacing: -0.025em;
   line-height: 1.3;
 }
@@ -296,8 +317,8 @@ dd {
   max-width: 28rem;
   margin: 0;
   color: var(--ink-soft);
-  font-size: 0.82rem;
-  line-height: 1.5;
+  font-size: 0.88rem;
+  line-height: 1.55;
 }
 
 .workflow-artifact {
@@ -566,24 +587,32 @@ dd {
   vector-effect: non-scaling-stroke;
 }
 
+.workflow-context {
+  margin: 1.5rem 0 0;
+  color: var(--muted);
+  font-size: 0.92rem;
+  text-align: left;
+}
+
 .section {
   padding-block: clamp(5rem, 8vw, 7rem);
   border-top: 1px solid var(--rule);
 }
 
 .section-intro {
-  max-width: 47rem;
+  max-width: 54rem;
   margin-bottom: clamp(2.6rem, 5vw, 4rem);
 }
 
 .section-intro h2 {
+  max-width: 18ch;
   margin-bottom: 1.2rem;
   font-size: clamp(2.35rem, 4.5vw, 4rem);
   font-weight: 760;
 }
 
 .section-intro p {
-  max-width: 44rem;
+  max-width: 50rem;
   margin-bottom: 0;
   color: var(--muted);
   font-size: 1.08rem;
@@ -593,8 +622,11 @@ dd {
   display: grid;
   grid-template-columns: minmax(0, 1fr) 4.2rem minmax(0, 1.08fr) 4.2rem minmax(0, 1fr);
   align-items: start;
-  padding-block: 1.25rem 1.4rem;
-  border-block: 1px solid var(--rule);
+  padding: clamp(1.5rem, 3vw, 2.5rem);
+  border: 1px solid var(--rule);
+  border-radius: 16px;
+  background: var(--surface);
+  box-shadow: 0 14px 45px rgba(16, 18, 23, 0.045);
 }
 
 .example-scene,
@@ -646,7 +678,7 @@ dd {
 .example-artifact strong {
   display: block;
   margin-top: 1rem;
-  font-size: clamp(1.7rem, 2.6vw, 2.25rem);
+  font-size: clamp(1.6rem, 2.6vw, 2.25rem);
   line-height: 1.05;
 }
 
@@ -694,6 +726,7 @@ dd {
   font-size: 0.92rem;
   font-weight: 680;
   line-height: 1.45;
+  overflow-wrap: anywhere;
 }
 
 .example-finding-card cite {
@@ -808,7 +841,8 @@ dd {
 .example-repo-result strong {
   margin-top: 0.2rem;
   color: #8da8ff;
-  font-size: 1rem;
+  font-size: 0.95rem;
+  overflow-wrap: anywhere;
 }
 
 .example-outcome {
@@ -861,10 +895,10 @@ dd {
 }
 
 .example-context {
-  max-width: 47rem;
-  margin: 1.8rem 0 0;
+  max-width: 54rem;
+  margin: 2rem 0 0;
   color: var(--ink-soft);
-  font-size: 1rem;
+  font-size: 1.04rem;
 }
 
 .start-commands pre {
@@ -957,6 +991,12 @@ dd {
   gap: 1.4rem;
 }
 
+.footer-inner a {
+  min-height: 3rem;
+  display: inline-flex;
+  align-items: center;
+}
+
 .footer-inner a[aria-current="page"] {
   color: var(--ink);
   font-weight: 680;
@@ -1042,16 +1082,17 @@ dd {
 
 @media (min-width: 1001px) and (max-height: 950px) {
   .hero {
-    padding-block: 2.25rem;
+    padding-block: 3.5rem 4rem;
   }
 
   .hero h1 {
-    margin-bottom: 1.25rem;
-    font-size: clamp(3.25rem, 5vw, 4.5rem);
+    margin-bottom: 1.35rem;
+    font-size: clamp(3.5rem, 4.8vw, 4.5rem);
   }
 
   .product-flow {
-    margin-top: 1.5rem;
+    margin-top: 3.5rem;
+    padding-block: 2rem;
   }
 }
 
@@ -1107,38 +1148,21 @@ dd {
     align-self: start;
   }
 
-  .workflow-arrow {
-    width: 1.5rem;
-    height: 3.5rem;
-    margin-inline: calc(min(14rem, 40%) / 2);
-    padding: 0;
-    justify-content: center;
-  }
-
-  .workflow-arrow svg {
-    width: 1.5rem;
-    height: 3.5rem;
-    transform: rotate(90deg);
-  }
-
+  .workflow-arrow,
   .example-story-arrow {
-    width: 1.5rem;
-    height: 3.5rem;
-    margin-inline: calc(min(14rem, 40%) / 2);
-    padding: 0;
-    justify-content: center;
+    display: none;
   }
 
-  .example-story-arrow svg {
-    width: 1.5rem;
-    height: 3.5rem;
-    transform: rotate(90deg);
+  .workflow-step:not(:last-child),
+  .example-scene:not(:last-child),
+  .example-finding {
+    margin-bottom: 4.5rem;
   }
 }
 
 @media (max-width: 680px) {
   .shell {
-    width: min(calc(100% - 2rem), 73.75rem);
+    width: min(calc(100% - 32px), 73.75rem);
   }
 
   .header-inner {
@@ -1162,19 +1186,24 @@ dd {
   }
 
   .hero {
-    padding-block: 3rem 4rem;
+    padding-block: 4.5rem 5.5rem;
   }
 
   .product-flow {
-    margin-top: 2.5rem;
+    margin-top: 4rem;
+    padding: 1.75rem 20px;
   }
 
   .hero h1 {
     font-size: clamp(2.65rem, 11.5vw, 3.3rem);
   }
 
+  .hero-lede {
+    font-size: 1.05rem;
+  }
+
   .section {
-    padding-block: 4.5rem;
+    padding-block: 6rem;
   }
 
   .section-intro {
@@ -1210,7 +1239,7 @@ dd {
 
 @media (max-width: 560px) {
   .workflow-story {
-    padding-block: 1rem 1.25rem;
+    padding-block: 1rem 0;
   }
 
   .workflow-step {
@@ -1237,6 +1266,10 @@ dd {
   .example-scene,
   .example-finding {
     display: block;
+  }
+
+  .example-story {
+    padding: 1.5rem 20px;
   }
 
   .example-check-step {
