@@ -12,7 +12,7 @@ const productionURL = new URL("https://www.motussupra.com/");
 const pages = ["/", "/security.html", "/privacy.html", "/404.html"];
 const accessibleExampleFacts = [
   "motus finding list --query shallow",
-  "Finding + origin run ID retrieved",
+  "Finding + origin run retrieved",
   "Then the agent checks GitHub",
   "512 commits",
 ];
@@ -226,9 +226,29 @@ async function inspectPage(browserName, browser, profile, route) {
       const exampleVisible = await page.locator('.site-nav a[href$="#example"]').isVisible();
       if (!exampleVisible) errors.push("mobile secondary navigation must show Example");
     }
+    const undersizedTargets = await page
+      .locator("a.brand, .site-nav a, .hero-actions a, .footer-inner a")
+      .evaluateAll((elements) => elements.flatMap((element) => {
+        if (element.getClientRects().length === 0) return [];
+        const bounds = element.getBoundingClientRect();
+        return bounds.height + 0.01 < 48 ? [`${element.textContent.trim()}: ${bounds.height}px`] : [];
+      }));
+    if (undersizedTargets.length > 0) {
+      errors.push(`mobile touch targets are below 48px: ${undersizedTargets.join(", ")}`);
+    }
+  }
+
+  if (profile.reducedMotion === "reduce") {
+    const scrollBehavior = await page.evaluate(() => getComputedStyle(document.documentElement).scrollBehavior);
+    if (scrollBehavior !== "auto") errors.push(`reduced motion leaves scroll-behavior at ${scrollBehavior}`);
   }
 
   if (route === "/") {
+    const heroAlignment = await page.locator(".hero-copy").evaluate((element) =>
+      getComputedStyle(element).textAlign,
+    );
+    if (heroAlignment !== "left") errors.push(`hero copy is ${heroAlignment}-aligned instead of left-aligned`);
+
     const codeOverflow = await page.locator("pre").evaluateAll((elements) =>
       elements.map((element) => element.scrollWidth - element.clientWidth),
     );
@@ -279,11 +299,12 @@ async function inspectPage(browserName, browser, profile, route) {
       const centerSpread = Math.max(...artifactCenters) - Math.min(...artifactCenters);
       if (centerSpread > 1) errors.push(`desktop workflow artifacts do not share one path (${centerSpread}px spread)`);
       if (profile.viewport.width >= 1140) {
-        const flowBottom = await page.locator(".product-flow").evaluate((element) =>
-          element.getBoundingClientRect().bottom,
-        );
-        if (flowBottom > profile.viewport.height + 1) {
-          errors.push(`desktop workflow ends below the first viewport by ${Math.ceil(flowBottom - profile.viewport.height)}px`);
+        const flowVisibility = await page.locator(".product-flow").evaluate((element) => {
+          const bounds = element.getBoundingClientRect();
+          return Math.max(0, innerHeight - bounds.top) / bounds.height;
+        });
+        if (flowVisibility < 0.65) {
+          errors.push(`desktop first viewport shows only ${Math.round(flowVisibility * 100)}% of the workflow`);
         }
       }
     } else {
@@ -291,12 +312,20 @@ async function inspectPage(browserName, browser, profile, route) {
         index === 0 || item.top > flowItems[index - 1].top,
       );
       if (!progressesTopToBottom) errors.push("narrow workflow is not one top-to-bottom sequence");
+      const flowGaps = flowItems.slice(1).map((item, index) => item.top - flowItems[index].bottom);
+      if (flowGaps.some((gap) => gap < 56)) {
+        errors.push(`narrow workflow needs more stage separation: ${flowGaps.join(", ")}px`);
+      }
+      const visibleConnectors = await page.locator(".workflow-arrow").evaluateAll((elements) =>
+        elements.filter((element) => getComputedStyle(element).display !== "none").length,
+      );
+      if (visibleConnectors !== 0) errors.push("narrow workflow still shows diagram arrows");
     }
 
     const exampleItems = await page.locator("[data-example-stage]").evaluateAll((elements) =>
       elements.map((element) => {
         const bounds = element.getBoundingClientRect();
-        return { left: bounds.left, top: bounds.top };
+        return { left: bounds.left, top: bounds.top, bottom: bounds.bottom };
       }),
     );
     if (exampleItems.length !== 3) errors.push(`example has ${exampleItems.length} stages instead of 3`);
@@ -318,6 +347,14 @@ async function inspectPage(browserName, browser, profile, route) {
         index === 0 || item.top > exampleItems[index - 1].top,
       );
       if (!progressesTopToBottom) errors.push("narrow example is not one top-to-bottom sequence");
+      const exampleGaps = exampleItems.slice(1).map((item, index) => item.top - exampleItems[index].bottom);
+      if (exampleGaps.some((gap) => gap < 56)) {
+        errors.push(`narrow example needs more stage separation: ${exampleGaps.join(", ")}px`);
+      }
+      const visibleConnectors = await page.locator(".example-story-arrow").evaluateAll((elements) =>
+        elements.filter((element) => getComputedStyle(element).display !== "none").length,
+      );
+      if (visibleConnectors !== 0) errors.push("narrow example still shows diagram arrows");
     }
   }
 
@@ -490,7 +527,8 @@ async function inspectNavigationAndFallbacks(browser) {
     if (fallbackPage.url() !== productionURL.href) {
       errors.push(`custom 404 home resolved to ${fallbackPage.url()}`);
     }
-    if ((await fallbackPage.locator("h1").innerText()) !== "Keep what a command run taught you.") {
+    const heading = (await fallbackPage.locator("h1").innerText()).replace(/\s+/g, " ").trim();
+    if (heading !== "A work ledger for AI-assisted engineering.") {
       errors.push("custom 404 home link did not load the site index");
     }
     await fallbackPage.close();

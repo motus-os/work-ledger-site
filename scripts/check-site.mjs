@@ -45,35 +45,35 @@ const requiredPhrases = {
     'id="workflow"',
     'id="example"',
     'id="install"',
-    "Keep what a command run taught you.",
-    "Motus records selected run facts and links them to a finding you write.",
-    "Local CLI. No account or server.",
+    "A work ledger for",
+    "AI-assisted engineering.",
+    "Motus connects the reason behind a fix or decision to the run and Git state that informed it.",
+    "Later, a developer or agent can find that context before similar work.",
     "How Motus works",
     "Finding added",
-    "Run the command through Motus",
-    "Motus records repository, commit, and outcome when available.",
-    "You add a finding when the run taught you something worth reusing.",
+    "Record the run",
+    "Motus records the repository, commit, outcome, and time for a test, build, script, or check.",
     "Local ledger",
-    "Motus links the finding to the run",
-    "Both stay in the same local, searchable ledger.",
-    "Search before similar work",
-    "Recorded run ID",
-    "Search returns the finding and recorded run ID before the next action.",
-    "The earlier finding changed the next check.",
-    "git rev-list --count HEAD",
+    "Link the finding",
+    "A developer or agent adds the explanation, constraint, workaround, decision, or next step worth keeping.",
+    "Retrieve before acting",
+    "Origin run",
+    "Search returns the finding and origin run before similar work begins.",
+    "Use one local ledger from a terminal, coding agent, or CI.",
+    "A real example from Motus",
+    "A finding changed the review.",
     "motus-os/motus",
-    "July 27, 2026",
+    "A shallow clone of the archived",
     "Check whether the clone is shallow. Compare the same branch with GitHub before drawing conclusions.",
     "motus finding list --query shallow",
-    "Finding + origin run ID retrieved",
+    "Finding + origin run retrieved",
     "Then the agent checks GitHub",
     "GitHub main",
     "512 commits",
-    "paginated GitHub's",
-    "Put standing rules in documentation",
-    "use Motus when the run reference matters.",
+    "A later agent retrieved the prior check with its origin run",
+    "Try Motus on a command you run.",
     "Download Motus",
-    "Source installation requires Go 1.26.5 or newer.",
+    "Every release includes checksums, SBOMs, and GitHub artifact attestations.",
     "go install github.com/motus-os/work-ledger/cmd/motus@latest",
     "$ motus version",
     "$ motus wrap -- npm test",
@@ -83,9 +83,9 @@ const requiredPhrases = {
     "finding show finding_...",
     ".motus/ledger.db",
     ".gitignore",
-    "State is local unless shared.",
-    "Add search to workflow instructions.",
-    "No account or server.",
+    "The ledger stays local unless you choose to share it.",
+    "Read the security model",
+    "stored-data details",
   ],
   "security.html": [
     "payload hashes and links between findings and runs",
@@ -239,12 +239,16 @@ for (const required of [
 ]) {
   if (!fs.existsSync(path.join(siteRoot, required))) fail(`missing ${required}`);
 }
-if (!read("assets/og-image.svg").includes("Selected run facts. Authored findings. One local ledger.")) {
+if (!read("assets/og-image.svg").includes("A work ledger for")
+  || !read("assets/og-image.svg").includes("AI-assisted engineering.")) {
   fail("site/assets/og-image.svg: social preview message does not match the homepage");
 }
 
 const homepage = read("index.html");
-const heroHeading = homepage.match(/<h1 id="hero-title">([^<]+)<\/h1>/)?.[1] || "";
+const heroHeading = (homepage.match(/<h1 id="hero-title">([\s\S]*?)<\/h1>/)?.[1] || "")
+  .replace(/<[^>]+>/g, " ")
+  .replace(/\s+/g, " ")
+  .trim();
 const heroLede = homepage.match(/<p class="hero-lede">([^<]+)<\/p>/)?.[1] || "";
 const wordCount = (text) => text.trim().split(/\s+/).filter(Boolean).length;
 if (wordCount(heroHeading) > 9) {
